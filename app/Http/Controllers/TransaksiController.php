@@ -7,6 +7,8 @@ use App\Models\DetailTransaksi;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\view\view;
+use Illuminate\Http\RedirectResponse;
 
 
 
@@ -79,34 +81,77 @@ class TransaksiController extends Controller
 }
 
 
-    public function show($id)
+  /**
+     * show
+     * 
+     * @param mixed $id
+     * @return View
+     */
+    public function show(string $id): View
     {
-        $transaksi = Transaksi::with(['detailTransaksi', 'product'])->findOrFail($id);
-        return view('transaksis.show', compact('transaksi'));
+        //get product by ID
+        $transaksi_model = new Transaksi;
+        $transaksis = $transaksi_model->get_transaksi()->where("transaksis.id", $id)->firstOrFail();
+
+        //render view with product
+        return view('transaksis.show', compact('transaksis'));
     }
 
-    public function edit($id)
-    {
-        $transaksi = Transaksi::findOrFail($id);
-        $products = Product::all();
-        return view('transaksis.edit', compact('transaksi', 'products'));
-    }
+/**
+ * edit
+ * 
+ * @param string $id
+ * @return View
+ */
+public function edit(string $id): View
+{
+    //get transaction by ID
+    $transaksi_model = new Transaksi;
+    $transaksis['transaksi'] = $transaksi_model->get_transaksi()->where("transaksis.id", $id)->firstOrFail();
+    $products = Product::all();
 
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'id_product' => 'required',
-            'jumlah_pembelian' => 'required|integer',
-            'diskon' => 'nullable|numeric',
-            'tanggal_transaksi' => 'required|date',
-            'nama_kasir' => 'required|string',
-        ]);
+    //render view with transaction and products
+    return view('transaksis.edit', compact('transaksis'));
+}
 
-        $transaksi = Transaksi::findOrFail($id);
-        $transaksi->update($request->all());
+/**
+ * update
+ * 
+ * @param Request $request
+ * @param string $id
+ * @return RedirectResponse
+ */
+public function update(Request $request, $id): RedirectResponse
+{
+    //validate form
+    $request->validate([
+        'jumlah_pembelian'    => 'required|numeric| min:1',
+        'nama_kasir'          => 'required|string|min:3',
+        'tanggal_transaksi'   => 'required|date',
+        'diskon'              => 'nullable|numeric|between:0,100',
+    ]);
 
-        return redirect()->route('transaksis.index')->with('success', 'Transaksi berhasil diperbarui');
-    }
+    //get transaction by ID
+    $transaksi_model = new Transaksi;
+    $transaksi = $transaksi_model->get_transaksi()->where("transaksis.id", $id)->firstOrFail();
+
+    //update transaction
+    $transaksi->update([
+        'jumlah_pembelian'  => $request->jumlah_pembelian,
+        'nama_kasir'        => $request->nama_kasir,
+        'tanggal_transaksi' => $request->tanggal_transaksi,
+        'diskon'            => $request->diskon,
+    ]);
+    DB::table('detail_transaksi')
+    ->where('id_transaksi', $transaksi->id)
+    ->update([  
+        'jumlah_pembelian' => $request->jumlah_pembelian,
+    ]);
+
+    //redirect to index with success message
+    return redirect()->route('transaksis.index')->with(['success' => 'Transaction updated successfully!']);
+}
+
 
     public function destroy($id)
     {

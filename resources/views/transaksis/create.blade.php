@@ -17,53 +17,27 @@
                 <div class="card-body">
                     <form id="transaksisForm" action="{{ route('transaksis.store') }}" method="POST">
                         @csrf
-                        <div class="product-row mb-3">
-                            <div class="form-group mb-3">
-                                <label for="id_product">Product 1</label>
-                                <select class="form-control" name="products[0][id_product]">
-                                    <option value="">-- Select Product --</option>
-                                    @foreach ($products as $product)
-                                        <option value="{{ $product->id }}">{{ $product->title }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label>Jumlah Pembelian</label>
-                                <input type="number" class="form-control" name="products[0][jumlah_pembelian]" required>
-                            </div>
-                        </div>
-
-                        <div class="product-row mb-3">
-                            <div class="form-group mb-3">
-                                <label for="id_product">Product 2</label>
-                                <select class="form-control" name="products[1][id_product]">
-                                    <option value="">-- Select Product --</option>
-                                    @foreach ($products as $product)
-                                        <option value="{{ $product->id }}">{{ $product->title }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label>Jumlah Pembelian</label>
-                                <input type="number" class="form-control" name="products[1][jumlah_pembelian]" required>
+                        <div id="productsContainer">
+                            <!-- Produk pertama sudah ada secara default -->
+                            <div class="product-row mb-3">
+                                <div class="form-group mb-3">
+                                    <label for="id_product">Product 1</label>
+                                    <select class="form-control" name="products[0][id_product]" required>
+                                        <option value="">-- Select Product --</option>
+                                        @foreach ($products as $product)
+                                            <option value="{{ $product->id }}">{{ $product->title }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label>Jumlah Pembelian</label>
+                                    <input type="number" class="form-control" name="products[0][jumlah_pembelian]" required>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="product-row mb-3">
-                            <div class="form-group mb-3">
-                                <label for="id_product">Product 3</label>
-                                <select class="form-control" name="products[2][id_product]">
-                                    <option value="">-- Select Product --</option>
-                                    @foreach ($products as $product)
-                                        <option value="{{ $product->id }}">{{ $product->title }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group mb-3">
-                                <label>Jumlah Pembelian</label>
-                                <input type="number" class="form-control" name="products[2][jumlah_pembelian]" required>
-                            </div>
-                        </div>
+                        <!-- Tombol untuk menambah produk -->
+                        <button type="button" class="btn btn-success mb-3" onclick="addProduct()">Tambah Produk</button>
 
                         <div class="form-group mb-3">
                             <label>Nama Kasir</label>
@@ -92,40 +66,42 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.ckeditor.com/4.13.1/standard/ckeditor.js"></script>
+    
     <script>
         CKEDITOR.replace( 'description' );
 
         function resetForm() {
             document.getElementById("transaksisForm").reset(); // Mereset semua nilai dalam form
+        }
 
-            // Reset CKEditor content to empty
-            for (var instance in CKEDITOR.instances) {
-                CKEDITOR.instances[instance].setData('');  // Reset CKEditor content
-            }
+        let productIndex = 1; // Mulai dari 1 karena produk pertama sudah diatur di form
+
+        // Fungsi untuk menambah produk baru ke form
+        function addProduct() {
+            productIndex++; // Increment index untuk produk baru
+
+            const productHtml = `
+                <div class="product-row mb-3">
+                    <div class="form-group mb-3">
+                        <label for="id_product">Product ${productIndex}</label>
+                        <select class="form-control" name="products[${productIndex}][id_product]" required>
+                            <option value="">-- Select Product --</option>
+                            @foreach ($products as $product)
+                                <option value="{{ $product->id }}">{{ $product->title }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label>Jumlah Pembelian</label>
+                        <input type="number" class="form-control" name="products[${productIndex}][jumlah_pembelian]" required>
+                    </div>
+                </div>
+            `;
+
+            // Tambahkan produk baru ke container
+            document.getElementById('productsContainer').insertAdjacentHTML('beforeend', productHtml);
         }
     </script>
-    <script>
-        function updatePrice() {
-            const selectedProduct = document.getElementById("id_product");
-            const hargaSatuan = selectedProduct.options[selectedProduct.selectedIndex].getAttribute('data-price');
-            document.getElementById("harga_satuan").value = hargaSatuan ? hargaSatuan : 0;
-            calculateTotal();
-        }
 
-        function calculateTotal() {
-            const hargaSatuan = parseFloat(document.getElementById("harga_satuan").value);
-            const jumlahPembelian = parseInt(document.getElementById("jumlah_pembelian").value);
-            const diskon = parseFloat(document.getElementById("diskon").value) || 0;
-
-            if (!isNaN(hargaSatuan) && !isNaN(jumlahPembelian)) {
-                let totalHarga = hargaSatuan * jumlahPembelian;
-                let nilaiDiskon = totalHarga * (diskon / 100);
-                let totalSetelahDiskon = totalHarga - nilaiDiskon;
-                document.getElementById("total_harga").value = totalSetelahDiskon.toFixed(2);
-            }
-        }
-        
-    </script>
-    
 </body>
 </html>
