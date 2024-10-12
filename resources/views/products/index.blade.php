@@ -5,8 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title> Data Product</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body style="background-image: url(https://blog-asset.jakmall.com/2023/12/TWICEJKT23_Poster4x5-1448x2048.png);background-size: auto;background-position: center; margin: 60px;" >
+        <body style="background-image: url(https://blog-asset.jakmall.com/2023/12/TWICEJKT23_Poster4x5-1448x2048.png);background-size: auto;background-position: center; margin: 60px;" >
 
     <div class="container mt-5">
         <div class="row" >
