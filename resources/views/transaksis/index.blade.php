@@ -16,7 +16,7 @@
                     <h3 class="text-center my-4" style="color: #FEE6A8">TWICE Fanpage Database</h3>
                     <hr>
                 </div>
-                <div class="card border-0 shadow-sm rounded">
+                <div class="card border-0 shadow-sm rounded" style="padding-top: 0px;padding-bottom: 30px;">
                     <div class="card-body">
                         <a href="{{ route('transaksis.create') }}" class="btn btn-md btn-success mb-3">ADD TRANSACTION</a>
                     </div>
