@@ -7,12 +7,12 @@
     <title>Add New Products</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body style="background: lightgray">
+<body style="background-image: url(https://blog-asset.jakmall.com/2023/12/TWICEJKT23_Poster4x5-1448x2048.png);background-size: auto;background-position: center; " >
 
     <div class="container mt-5 mb-5">
         <div class="row">
             <div class="col-md-12">
-                <h3>Add New Products</h3>
+                <h3 style="color:white; text-align:center; margin-bottom:10px;">Add New Products</h3>
                 <div class="card border-0 shadow-sm rounded">
                     <div class="card-body">
                         <form id="productForm" action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
