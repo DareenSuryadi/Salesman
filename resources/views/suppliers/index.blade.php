@@ -13,7 +13,7 @@
     <div class="row">
         <div class="col-md-12">
             <div>
-                <h3 class="text-center my-4" style="color: #FEE6A8">Katherin Supplier Database</h3>
+                <h3 class="text-center my-4" style="color: #FEE6A8">Supplier Database</h3>
                 <hr>
             </div>
             <div class="card border-0 shadow-sm rounded">
