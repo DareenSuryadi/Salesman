@@ -19,14 +19,14 @@ class TransaksiController extends Controller
         
         // $transaksis = Transaksi::with(['detailTransaksi', 'product'])->paginate(10);
         $transaksismodel = new Transaksi;
-        $transaksis = $transaksismodel->get_transaksi()->paginate(10);
+        $transaksis = $transaksismodel->get_transaksi()->get();
         return view('transaksis.index', compact('transaksis'));
     }
 
     public function create()
     {
         $product = new Product;
-        $products = $product->get_product()->paginate(10);
+        $products = $product->get_product()->get();
         return view('transaksis.create', compact('products'));
     }
 

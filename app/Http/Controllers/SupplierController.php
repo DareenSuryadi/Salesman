@@ -17,7 +17,7 @@ class SupplierController extends Controller
     public function index() : View
     {
         // Ambil semua supplier
-        $suppliers = Supplier::latest()->paginate(10);
+        $suppliers = Supplier::latest()->get();
 
         // Render view dengan data supplier
         return view('suppliers.index', compact('suppliers'));

@@ -1,145 +1,118 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Add New Products</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body style="background: lightgray">
+@extends('admin.layouts.master')
 
-    <div class="container mt-5 mb-5">
-        <div class="row">
-            <div class="col-md-12">
-                <h3>Edit Products</h3>
-                <div class="card border-0 shadow-sm rounded">
-                    <div class="card-body">
-                        <form action="{{ route('products.update', $data['product']->id) }}" method="POST" enctype="multipart/form-data">
-                        
-                            @csrf
-                            @method('PUT')
+@section('content')
+<h1 class="h3 mb-2 text-gray-800">Edit Form</h1>
 
-                            <div class="form-group mb-3">
-                                <label class="font-weight-bold">IMAGE</label>
-                                <input type="file" class="form-control @error('image') is-invalid @enderror" name="image">
-
-                                @error('image')
-                                    <div class="alert alert-danger mt-2">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group mb-3">
-                                <label for="product_category_id">Product Category</label>
-                                <select class="form-control" id="product_category_id" name="product_category_id">
-                                    <option value="">-- Select Category Product --</option>
-                                    @foreach ($data['categories'] as $category)
-                                        <option value="{{ $category->id }}"
-                                        @if(old("product_category_id", $data['product']->product_category_id) == $category->id) selected @endif>
-                                        {{ $category->product_category_name }}</option>
-                                    @endforeach
-                                </select>
-
-                                @error('product_category_id')
-                                    <div class="alert alert-danger mt-2">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group mb-3">
-                                <label for="id_supplier">Supplier</label>
-                                <select class="form-control" id="id_supplier" name="id_supplier">
-                                    <option value="">-- Select Supplier --</option>
-                                    @foreach ($data['suppliers_'] as $supplier)
-                                        <option value="{{ $supplier->id }}"
-                                        @if(old("id_supplier", $data['product']->id_supplier) == $supplier->id) selected @endif>
-                                        {{ $supplier->supplier_name }}</option>
-                                    @endforeach
-                                </select>
-                                @error('id_supplier')
-                                    <div class="alert alert-danger mt-2">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group mb-3">
-                                <label class="font-weight-bold">TITLE</label>
-                                <input type="text" class="form-control @error('title') is-invalid @enderror" name="title"  value="{{old('title' , $data['product']->title)}}" placeholder="Masukkan Judul Product">
-                            
-                                @error('title')
-                                    <div class="alert alert-danger mt-2">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group mb-3">
-                                <label class="font-weight-bold">DESCRIPTION</label>
-                                <textarea class="form-control @error('description') is-invalid @enderror" name="description" rows="5" placeholder="Masukkan Description Product">
-                                {{old('description' , $data['product']->description)}}</textarea>
-
-                                @error('description')
-                                    <div class="alert alert-danger mt-2">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group mb-3">
-                                        <label class="font-weight-bold">PRICE</label>
-                                        <input type="number" class="form-control @error('price') is-invalid @enderror" name="price" value="{{old('price' , $data['product']->price)}}" placeholder="Masukkan Harga Product">
-
-                                        @error('price')
-                                            <div class="alert alert-danger mt-2">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
-                                    </div>
-                                </div>
-
-                                <div class="col-md-6">
-                                    <div class="form-group mb-3">
-                                        <label class="font-weight-bold">STOCK</label>
-                                        <input type="number" class="form-control @error('stock') is-invalid @enderror" name="stock" value="{{old('stock' , $data['product']->stock)}}" placeholder="Masukkan Stock Product">
-                                    
-                                        @error('stock')
-                                            <div class="alert alert-danger mt-2">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-
-                            <button type="submit" class="btn btn-md btn-primary me-3">Update</button>
-                            <button type="button" id="resetBtn" onclick="resetForm()" class="btn btn-md btn-warning">RESET</button>
-
-                        </form> 
-                    </div>
-                </div>
-            </div>
+@if(Session::has('success'))
+    <div class="card mb-4 py-3 border-left-primary">
+        <div class="card-body">
+            {{Session::get('success')}}
         </div>
     </div>
+@endif
+<div class="card shadow mb-4">
+    
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Edit Product</h6>
+    </div>
+    <div class="card-body">
+        <form action="{{route('products.update', $data['product']->id)}}" method="post" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+            <div class="form-group">
+                <label for="image">Image</label>
+                <input type="file" class="form-control form-control-user @error('image') is-invalid @enderror" id="image" name="image">
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.ckeditor.com/4.13.1/standard/ckeditor.js"></script>
-    <script>
-        CKEDITOR.replace( 'description' );
+                @error('image')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
 
-        // function resetForm() {
-        //     document.getElementById("productForm").reset(); // Mereset semua nilai dalam form
+            <div class="form-group">
+                <label for="product_category_id">Category</label>
+                <select name="product_category_id" class="form-control @error('product_category_id') is-invalid @enderror">
+                    <option value="">-- Select Category Product --</option>
+                    @foreach ($data['categories'] as $category)
+                        <option value="{{ $category->id }}" @if(old("product_category_id", $data['product']->product_category_id) == $category->id) selected @endif>{{ $category->product_category_name }}</option>
+                    @endforeach
+                </select>
 
-        //     // Reset CKEditor content to empty
-        //     for (var instance in CKEDITOR.instances) {
-        //         CKEDITOR.instances[instance].setData('');  // Reset CKEditor content
-        //     }
-        // }
-    </script>
-</body>
-</html>
+                @error('product_category_id')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+            
+            <div class="form-group">
+                <label for="id_supplier">Supplier</label>
+                <select name="id_supplier" class="form-control @error('id_supplier') is-invalid @enderror">
+                    <option value="">-- Select Supplier --</option>
+                    @foreach ($data['suppliers_'] as $supplier)
+                        <option value="{{ $supplier->id }}" @if(old("id_supplier", $data['product']->id_supplier) == $supplier->id) selected @endif>{{ $supplier->supplier_name }}</option>
+                    @endforeach
+                </select>
+
+                @error('id_supplier')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" class="form-control form-control-user @error('title') is-invalid @enderror" id="title"
+                placeholder="Masukkan title product" value="{{ old('title', $data['product']->title) }}" name="title" required autocomplete="title">
+
+                @error('title')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea class="form-control @error('description') is-invalid @enderror" name="description" rows="5" placeholder="Masukkan description product">{{ old('description', $data['product']->description) }}</textarea>
+
+                @error('description')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="price">Price</label>
+                <input type="number" class="form-control form-control-user @error('price') is-invalid @enderror" id="price"
+                placeholder="Masukkan price" value="{{ old('price', $data['product']->price) }}" name="price" required autocomplete="price">
+
+                @error('price')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+            
+            <div class="form-group">
+                <label for="stock">Stock</label>
+                <input type="number" class="form-control form-control-user @error('stock') is-invalid @enderror" id="stock"
+                placeholder="Masukkan stock" value="{{ old('stock', $data['product']->stock) }}" name="stock" required autocomplete="stock">
+
+                @error('stock')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <button class="btn btn-outline-primary">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+@endsection

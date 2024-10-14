@@ -1,96 +1,101 @@
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title> Data Product</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-        <body style="background-image: url(https://blog-asset.jakmall.com/2023/12/TWICEJKT23_Poster4x5-1448x2048.png);background-size: auto;background-position: center; margin: 60px;" >
+@extends('admin.layouts.master')
 
-    <div class="container mt-5">
-        <div class="row" >
-            <div class="col-md-12" >
-                <div>
-                    <h3 class="text-center my-4" style="color: #FEE6A8"> TWICE Fanpage Database</h3>
-                    <hr>
-                </div>
-                <div class="card border-0 shadow-sm rounded" style="padding-top: 0px;padding-bottom: 30px;">
-                    <div class="card-body">
-                        <a href="{{ route('products.create')}}" class="btn btn-md btn-success mb-3">ADD PRODUCT</a>
-                    </div>
-      
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th scope="col">IMAGE</th>
-                <th scope="col">NAMA SUPPLIER</th>
-                <th scope="col">CATEGORY</th>
-                <th scope="col">TITLE</th>
-                <th scope="col">PRICE</th>
-                <th scope="col">STOCK</th>
-                <th scope="col" style="width: 20%">ACTIONS</th>
-</tr>
-</thead>
-<tbody>
-    @forelse ($products as $product)
-        <tr>
-            <td class="text-center">
-                <img src="{{asset('/storage/images/'.$product->image)}}" class="rounded" style="width:150px; height: 230px;">
-            </td>
-            <td class="text-center">{{ $product->supplier_name}}</td>
-            <td class="text-center">{{ $product->product_category_name}}</td>
-            <td class="text-center" >{{ $product->title}}</td>
-            <td class="text-center">{{"Rp " . number_format($product->price,2,'.')}}</td>
-            <td class="text-center">{{ $product->stock }}</td>
-            <td class="text-center">
-                <form onsubmit="return confirm('Yakin ga lu?');" action="{{ route('products.destroy', $product->id) }}" method="POST">
-                    <a href="{{ route('products.show', $product->id)}}" class="btn btn-outline-primary">SHOW</a>
-                    <a href="{{ route('products.edit', $product->id)}}" class="btn btn-outline-primary">EDIT</a>
-                    @csrf
-                    @method('DELETE')
+@section('content')
+@if (Auth::user()->role == 'admin')
+<h1 class="h3 mb-2 text-gray-800">Product Tables</h1>
 
-                    <button type="submit" class="btn btn-outline-danger">HAPUS</button>
-                </form>
-            </td>
-        </tr>
-        @empty
-            <div class="alert alert-danger">
-                Data Products Belum tersedia brow cobalah beberapa saat lagi..
-            </div>
-        @endforelse
-        </tbody>
-        </table>
-        
-        {{ $products->links()}}
-
-                </div>
-            </div>
+@if(Session::has('success'))
+    <div class="card mb-4 py-3 border-left-primary">
+        <div class="card-body">
+            {{Session::get('success')}}
         </div>
     </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@endif
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">DataTables Product
+        <span class="float-right">
+            <a href="{{route('products.create')}}">
+                <button class="btn btn-outline-secondary">Add Product</button>
+            </a>
+        </span>
+        </h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th scope="col">Image</th>
+                        <th scope="col">Supplier Name</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Stock</th>
+                        <th scope="col" style="width: 20%">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($products as $product)
+                        <tr>
+                            <td scope="text-center">
+                                <img src="{{ asset('/storage/images/'.$product->image) }}" class="rounded" style="width: 150px">
+                            </td>
+                            <td>{{ $product->supplier_name }}</td>
+                            <td>{{ $product->title }}</td>
+                            <td>{{ $product->product_category_name }}</td>
+                            <td>{{ "Rp " . number_format($product->price,2,',','.') }}</td>
+                            <td>{{ $product->stock }}</td>
+                            <td class="text-center">
+                                <a href="{{route('products.show', [$product->id])}}">
+                                    <button class="btn btn-primary">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </a>
+                                <a href="{{route('products.edit', [$product->id])}}">
+                                    <button class="btn btn-success">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </a>
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal{{$product->id}}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
 
-    <script>
-        // message with sweetalert
-        @if(session('success'))
-            swal.fire({
-                icon:"success",
-                title:"CONGRATS ANDA BERHASIL",
-                text:"{{session('success')}}",
-                showConfirmButton: false,
-                timer: 2000
-            });
-        @elseif(session('error'))
-            swal.fire({
-                icon:"error",
-                title:"MAAF ANDA GAGAL UEWK WEK WEK",
-                text:"{{session('error')}}",
-                showConfirmButton: false,
-                timer: 2000
-            });
-        @endif
-    </script>
-</body>
-</html>
-
+                                <div class="modal fade" id="exampleModal{{$product->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <form action="{{route('products.destroy',[$product->id])}}" method="post">
+                                        @csrf
+                                        {{method_field('DELETE')}}
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Hapus Product</h5>
+                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Apakah Anda Yakin ?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-outline-danger">Delete</button>
+                                    </div>
+                                    </div>
+                                    </form>
+                                </div>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                    <div class="alert alert-danger">
+                        Data Product belum Tersedia.
+                    </div>
+                    @endforelse
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@endif
+@endsection

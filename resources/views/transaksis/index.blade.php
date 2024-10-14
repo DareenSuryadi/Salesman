@@ -1,110 +1,109 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Transaksi Penjualan Data Product</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body style="background-image: url(https://blog-asset.jakmall.com/2023/12/TWICEJKT23_Poster4x5-1448x2048.png); background-size: cover;">
-    
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-12">
-                <div>
-                    <h3 class="text-center my-4" style="color: #FEE6A8">TWICE Fanpage Database</h3>
-                    <hr>
-                </div>
-                <div class="card border-0 shadow-sm rounded" style="padding-top: 0px;padding-bottom: 30px;">
-                    <div class="card-body">
-                        <a href="{{ route('transaksis.create') }}" class="btn btn-md btn-success mb-3">ADD TRANSACTION</a>
-                    </div>
-          
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th scope="col">ID PRODUK</th>
-                                <th scope="col">ID DETAIL TRANSAKSI</th>
-                                <th scope="col">JUMLAH PEMBELIAN</th>
-                                <th scope="col">NAMA KASIR</th>
-                                <th scope="col">NAMA PRODUK</th>
-                                <th scope="col">TANGGAL TRANSAKSI</th>
-                                <th scope="col">DISKON</th>
-                                <th scope="col">TOTAL HARGA</th>
-                                <th scope="col" style="width: 20%">ACTIONS</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($transaksis as $transaksi)
-                                <tr>
-                                    <td class="text-center">{{ $transaksi->id_product }}</td>
-                                    <td class="text-center">{{ $transaksi->id }}</td>
-                                    <td class="text-center">{{ $transaksi->jumlah_pembelian }}</td>
-                                    <td class="text-center">{{ $transaksi->nama_kasir }}</td>
-                                    <td class="text-center">{{ $transaksi->title }}</td>
-                                    <td class="text-center">{{ $transaksi->tanggal_transaksi }}</td>
-                                    <td class="text-center">{{ $transaksi->diskon }}%</td>
-                                    <td class="text-center">
-                                        
-                                            @php
-                                                // Menghitung total harga sebelum diskon
-                                                $totalHarga = $transaksi->price * $transaksi->jumlah_pembelian;
-                                                // Menghitung nilai diskon
-                                                $diskon = $totalHarga * ($transaksi->diskon / 100);
-                                                // Menghitung total setelah diskon
-                                                $totalSetelahDiskon = $totalHarga - $diskon;
-                                            @endphp
-                                            {{ number_format($totalSetelahDiskon, 2) }}
-                                        
-                                    </td>
-                                    <td class="text-center">
-                                        <form onsubmit="return confirm('Yakin ingin menghapus transaksi ini?');" action="{{ route('transaksis.destroy', $transaksi->id) }}" method="POST">
-                                            <a href="{{ route('transaksis.show', $transaksi->id) }}" class="btn btn-outline-primary">SHOW</a>
-                                            <a href="{{ route('transaksis.edit', $transaksi->id) }}" class="btn btn-outline-primary">EDIT</a>
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-outline-danger">HAPUS</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="9" class="text-center">Data transaksi belum tersedia.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+@extends('admin.layouts.master')
 
-                    {{-- Pagination --}}
-                    {{ $transaksis->links() }}
-                </div>
-            </div>
+@section('content')
+@if (Auth::user()->role == 'admin')
+<h1 class="h3 mb-2 text-gray-800">Transaksi Tables</h1>
+
+@if(Session::has('success'))
+    <div class="card mb-4 py-3 border-left-primary">
+        <div class="card-body">
+            {{Session::get('success')}}
         </div>
     </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@endif
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">DataTables Transaksi
+        <span class="float-right">
+            <a href="{{route('transaksis.create')}}">
+                <button class="btn btn-outline-secondary">Add Transaksi</button>
+            </a>
+        </span>
+        </h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th scope="col">Nama Produk</th>
+                        <th scope="col">Jumlah Pembelian</th>
+                        <th scope="col">Nama Kasir</th>
+                        <th scope="col">Tanggal Transaksi</th>
+                        <th scope="col">Diskon</th>
+                        <th scope="col">Total Harga</th>
+                        <th scope="col" style="width: 20%">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($transaksis as $transaksi)
+                        <tr>
+                            <td>{{ $transaksi->title }}</td>
+                            <td>{{ $transaksi->jumlah_pembelian }}</td>
+                            <td>{{ $transaksi->nama_kasir }}</td>
+                            <td>{{ $transaksi->tanggal_transaksi }}</td>
+                            <td>{{ $transaksi->diskon }}%</td>
+                            <td class="text-center">           
+                                @php
+                                    // Menghitung total harga sebelum diskon
+                                    $totalHarga = $transaksi->price * $transaksi->jumlah_pembelian;
+                                    // Menghitung nilai diskon
+                                    $diskon = $totalHarga * ($transaksi->diskon / 100);
+                                    // Menghitung total setelah diskon
+                                    $totalSetelahDiskon = $totalHarga - $diskon;
+                                @endphp
+                                {{ number_format($totalSetelahDiskon, 2) }}
+                            </td>
+                            <td class="text-center">
+                                <a href="{{route('transaksis.show', [$transaksi->id])}}">
+                                    <button class="btn btn-primary">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </a>
+                                <a href="{{route('transaksis.edit', [$transaksi->id])}}">
+                                    <button class="btn btn-success">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </a>
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal{{$transaksi->id}}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
 
-    <script>
-        // message with sweetalert
-        @if(session('success'))
-            swal.fire({
-                icon: "success",
-                title: "CONGRATS ANDA BERHASIL",
-                text: "{{ session('success') }}",
-                showConfirmButton: false,
-                timer: 2000
-            });
-        @elseif(session('error'))
-            swal.fire({
-                icon: "error",
-                title: "MAAF ANDA GAGAL",
-                text: "{{ session('error') }}",
-                showConfirmButton: false,
-                timer: 2000
-            });
-        @endif
-    </script>
-</body>
-</html>
+                                <div class="modal fade" id="exampleModal{{$transaksi->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <form action="{{route('transaksis.destroy',[$transaksi->id])}}" method="post">
+                                        @csrf
+                                        {{method_field('DELETE')}}
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Hapus Transaksi</h5>
+                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Apakah Anda Yakin ?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-outline-danger">Delete</button>
+                                    </div>
+                                    </div>
+                                    </form>
+                                </div>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                    <div class="alert alert-danger">
+                        Data Transaksi belum Tersedia.
+                    </div>
+                    @endforelse
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@endif
+@endsection

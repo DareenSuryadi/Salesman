@@ -13,22 +13,46 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('product_category_id')->nullable()->index();
+            $table->foreignId('id_supplier')->nullable()->index();
             $table->string('image');
             $table->string('title');
-            $table->unsignedBigInteger('product_category_id');
-            $table->unsignedBigInteger('id_supplier');
             $table->text('description');
-            $table->decimal('price', 8, 2);
-            $table->integer('stock');
+            $table->bigInteger('price');
+            $table->integer('stock')->default(0);
             $table->timestamps();
-        
-            // Foreign key constraints
-            $table->foreign('product_category_id')->references('id')->on('category_product');
-            $table->foreign('id_supplier')->references('id')->on('suppliers');
         });
-        Schema::create('category_product', function (Blueprint $table){
+        
+        Schema::create('category_product', function (Blueprint $table) {
             $table->id();
             $table->string('product_category_name');
+            $table->timestamps();
+        });
+        
+        Schema::create('suppliers', function (Blueprint $table) {
+            $table->id();
+            $table->string('supplier_name');
+            $table->text('address_supp');
+            $table->string('phone_supp');
+            $table->string('pic_name');
+            $table->string('phone');
+            $table->text('address');
+            $table->timestamps();
+        });
+        
+        Schema::create('transaksis', function (Blueprint $table) {
+            $table->id();
+            $table->string('nama_kasir');
+            $table->timestamp('tanggal_transaksi');
+            $table->integer('diskon')->default(0);
+            $table->timestamps();
+        });
+        
+        Schema::create('detail_transaksi', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('id_transaksi')->nullable()->index();
+            $table->foreignId('id_product')->nullable()->index();
+            $table->integer('jumlah_pembelian');
             $table->timestamps();
         });
     

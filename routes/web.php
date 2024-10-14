@@ -5,10 +5,22 @@ use App\Http\Controllers\TransaksiController;
 
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('index');
 });
 
 //route resource for products
-Route::resource('/products',\App\Http\Controllers\ProductController::class);
-Route::resource('/suppliers', \App\Http\Controllers\SupplierController::class);
-Route::resource('transaksis', TransaksiController::class);
+Route::resource('/products',\App\Http\Controllers\ProductController::class)->middleware('auth');
+Route::resource('/suppliers', \App\Http\Controllers\SupplierController::class)->middleware('auth');
+Route::resource('transaksis', TransaksiController::class)->middleware('auth');
+Route::get('/', [App\Http\Controllers\LoginController::class, 'index'])->name('index');
+Route::get('/plist', [App\Http\Controllers\LoginController::class, 'plist'])->name('plist');
+Route::get('/home', [App\Http\Controllers\LoginController::class, 'home'])->name('home')->middleware('auth');
+Route::get('/profile', [App\Http\Controllers\LoginController::class, 'profile'])->name('profile')->middleware('auth');
+Route::get('/indexc', [App\Http\Controllers\ProductController::class, 'indexc'])->name('indexc')->middleware('auth');
+Route::resource('/users', \App\Http\Controllers\UserController::class)->middleware('auth');
+Route::resource('/category', \App\Http\Controllers\CategoryController::class)->middleware('auth');
+Route::get('/register', [\App\Http\Controllers\RegisterController::class, 'registerForm'])->name('register');
+Route::post('/register', [\App\Http\Controllers\RegisterController::class, 'register']);
+Route::get('/login', [\App\Http\Controllers\LoginController::class, 'loginForm'])->name('login');
+Route::post('/login', [\App\Http\Controllers\LoginController::class, 'login']);
+Route::post('/logout', [\App\Http\Controllers\LoginController::class, 'logout'])->name('logout');

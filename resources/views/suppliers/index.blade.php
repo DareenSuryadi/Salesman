@@ -1,98 +1,99 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Data Supplier</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body style="background-image: url(https://blog-asset.jakmall.com/2023/12/TWICEJKT23_Poster4x5-1448x2048.png)">
+@extends('admin.layouts.master')
 
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-md-12">
-            <div>
-                <h3 class="text-center my-4" style="color: #FEE6A8">Supplier Database</h3>
-                <hr>
-            </div>
-            <div class="card border-0 shadow-sm rounded">
-                <div class="card-body">
-                    <a href="{{ route('suppliers.create') }}" class="btn btn-md btn-success mb-3">ADD SUPPLIER</a>
-                </div>
+@section('content')
+@if (Auth::user()->role == 'admin')
+<h1 class="h3 mb-2 text-gray-800">Supplier Tables</h1>
 
-                <table class="table table-bordered">
-                    <thead>
+@if(Session::has('success'))
+    <div class="card mb-4 py-3 border-left-primary">
+        <div class="card-body">
+            {{Session::get('success')}}
+        </div>
+    </div>
+@endif
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">DataTables supplier
+        <span class="float-right">
+            <a href="{{route('suppliers.create')}}">
+                <button class="btn btn-outline-secondary">Add Supplier</button>
+            </a>
+        </span>
+        </h6>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
                     <tr>
-                        <th scope="col">SUPPLIER NAME</th>
-                        <th scope="col">PHONE_SUPP</th>
-                        <th scope="col">ADDRESS_SUPP</th>
-                        <th scope="col">PIC_NAME</th>
-                        <th scope="col">PHONE</th>
-                        <th scope="col">ADDRESS</th>
-                        <th scope="col" style="width: 20%">ACTIONS</th>
+                        <th scope="col">Nama Supplier</th>
+                        <th scope="col">Adress Supplier</th>
+                        <th scope="col">Phone Supplier</th>
+                        <th scope="col">Nama PIC</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Phone</th>
+                        <th scope="col" style="width: 20%">Action</th>
                     </tr>
-                    </thead>
-                    <tbody>
+                </thead>
+                <tbody>
                     @forelse ($suppliers as $supplier)
                         <tr>
-                            <td class="text-center">{{ $supplier->supplier_name }}</td>
-                            <td>{{ $supplier->phone_supp }}</td>
+                            <td>{{ $supplier->supplier_name }}</td>
                             <td>{{ $supplier->address_supp }}</td>
+                            <td>{{ $supplier->phone_supp }}</td>
                             <td>{{ $supplier->pic_name }}</td>
-                            <td>{{ $supplier->phone }}</td>
                             <td>{{ $supplier->address }}</td>
+                            <td>{{ $supplier->phone }}</td>
                             <td class="text-center">
-                                <form onsubmit="return confirm('Are you sure?');"
-                                      action="{{ route('suppliers.destroy', $supplier->id) }}" method="POST">
-                                    <a href="{{ route('suppliers.show', $supplier->id) }}"
-                                       class="btn btn-outline-primary">SHOW</a>
-                                    <a href="{{ route('suppliers.edit', $supplier->id) }}"
-                                       class="btn btn-outline-primary">EDIT</a>
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-outline-danger">DELETE</button>
-                                </form>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="text-center">
-                                <div class="alert alert-danger">
-                                    Data Supplier Belum tersedia, cobalah beberapa saat lagi...
+                                <a href="{{route('suppliers.show', [$supplier->id])}}">
+                                    <button class="btn btn-primary">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </a>
+                                <a href="{{route('suppliers.edit', [$supplier->id])}}">
+                                    <button class="btn btn-success">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </a>
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal{{$supplier->id}}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+
+                                <div class="modal fade" id="exampleModal{{$supplier->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <form action="{{route('suppliers.destroy',[$supplier->id])}}" method="post">
+                                        @csrf
+                                        {{method_field('DELETE')}}
+                                    <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Hapus Supplier</h5>
+                                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        Apakah Anda Yakin ?
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-outline-danger">Delete</button>
+                                    </div>
+                                    </div>
+                                    </form>
+                                </div>
                                 </div>
                             </td>
                         </tr>
+                    @empty
+                    <div class="alert alert-danger">
+                        Data supplier belum Tersedia.
+                    </div>
                     @endforelse
-                    </tbody>
-                </table>
-                {{ $suppliers->links() }}
-            </div>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<script>
-    // message with sweetalert
-    @if(session('success'))
-    swal.fire({
-        icon: "success",
-        title: "Success",
-        text: "{{ session('success') }}",
-        showConfirmButton: false,
-        timer: 2000
-    });
-    @elseif(session('error'))
-    swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "{{ session('error') }}",
-        showConfirmButton: false,
-        timer: 2000
-    });
-    @endif
-</script>
-</body>
-</html>
+@endif
+@endsection

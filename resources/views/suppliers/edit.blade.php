@@ -1,110 +1,98 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Edit Products</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body style="background: lightpink">
+@extends('admin.layouts.master')
 
-    <div class="container mt-5 mb-5">
-        <div class="row">
-            <div class="col-md-12">
-                <h4>Edit Supplier</h4>
-                <div class="card border-0 shadow-sm rounded">
-                    <div class="card-body">
-                        <form action="{{ route('suppliers.update', $data['supplier']->id) }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    @method('PUT')
+@section('content')
+<h1 class="h3 mb-2 text-gray-800">Edit Form</h1>
 
+@if(Session::has('success'))
+    <div class="card mb-4 py-3 border-left-primary">
+        <div class="card-body">
+            {{Session::get('success')}}
+        </div>
+    </div>
+@endif
+<div class="card shadow mb-4">
+    
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Edit Supplier</h6>
+    </div>
+    <div class="card-body">
+        <form action="{{route('suppliers.update', $data['supplier']->id)}}" method="post" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+            <div class="form-group">
+                <label for="supplier_name">Nama Supplier</label>
+                <input type="text" class="form-control form-control-user @error('supplier_name') is-invalid @enderror" id="supplier_name"
+                placeholder="Masukkan nama supplier" value="{{ old('supplier_name', $data['supplier']->supplier_name) }}" name="supplier_name" required autocomplete="supplier_name">
 
-                    <div class="form-group mb-3">
-                    <label class="font-weight-bold">SUPPLIER NAME</label>
-                    <input type="text" class="form-control @error('supplier_name') is-invalid @enderror" name="supplier_name" value="{{ old('supplier_name', $data['supplier']->supplier_name) }}" placeholder="Masukkan Nama Supplier">
-                    <!-- error message untuk supplier name -->
-                    @error('supplier_name')
-                        <div class="alert alert-danger mt-2">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
+                @error('supplier_name')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
 
-                <div class="form-group mb-3">
-                    <label class="font-weight-bold">ADDRESS SUPPLIER</label>
-                    <input type="text" class="form-control @error('address_supp') is-invalid @enderror" name="address_supp" value="{{ old('address_supp', $data['supplier']->address_supp) }}" placeholder="Masukkan Alamat Supplier">
-                    <!-- error message untuk address supplier -->
-                    @error('address_supp')
-                        <div class="alert alert-danger mt-2">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
+            <div class="form-group">
+                <label for="address_supp">Address Supplier</label>
+                <textarea class="form-control @error('address_supp') is-invalid @enderror" name="address_supp" rows="5" placeholder="Masukkan address supplier">{{ old('address_supp', $data['supplier']->address_supp) }}</textarea>
 
-                <div class="col-md-6">
-                        <div class="form-group mb-3">
-                            <label class="font-weight-bold">PHONE SUPPLIER</label>
-                            <input type="number" class="form-control @error('phone_supp') is-invalid @enderror" name="phone_supp" value="{{ old('phone_supp', $data['supplier']->phone_supp) }}" placeholder="Masukkan Nmor HP Supplier">
-                            <!-- error message untuk phone supplier -->
-                            @error('phone_supp')
-                                <div class="alert alert-danger mt-2">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-                    
+                @error('address_supp')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+            
+            <div class="form-group">
+                <label for="phone_supp">Phone Supplier</label>
+                <input type="number" class="form-control form-control-user @error('phone_supp') is-invalid @enderror" id="phone_supp"
+                placeholder="Masukkan phone supplier" value="{{ old('phone_supp', $data['supplier']->phone_supp) }}" name="phone_supp" required autocomplete="phone_supp">
 
-                <div class="form-group mb-3">
-                    <label class="font-weight-bold">PIC NAME</label>
-                    <input type="text" class="form-control @error('pic_name') is-invalid @enderror" name="pic_name" value="{{ old('pic_name', $data['supplier']->pic_name) }}" placeholder="Masukkan Nama PIC">
-                    <!-- error message untuk pic name -->
-                    @error('pic_name')
-                        <div class="alert alert-danger mt-2">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
+                @error('phone_supp')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
 
-                <div class="col-md-6">
-                        <div class="form-group mb-3">
-                            <label class="font-weight-bold">PHONE</label>
-                            <input type="number" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ old('phone', $data['supplier']->phone) }}" placeholder="Masukkan Nmor HP PIC">
-                            <!-- error message untuk phon -->
-                            @error('phone')
-                                <div class="alert alert-danger mt-2">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-              
-                </div>
+            <div class="form-group">
+                <label for="pic_name">Nama PIC</label>
+                <input type="text" class="form-control form-control-user @error('pic_name') is-invalid @enderror" id="pic_name"
+                placeholder="Masukkan nama pic" value="{{ old('pic_name', $data['supplier']->pic_name) }}" name="pic_name" required autocomplete="pic_name">
 
-                <div class="form-group mb-3">
-                    <label class="font-weight-bold">ADDRESS</label>
-                    <textarea class="form-control @error('address') is-invalid @enderror" name="address" rows="5" placeholder="Masukkan Alamat">{{ old('address', strip_tags($data['supplier']->address)) }}</textarea>
-                    <!-- error message untuk address -->
-                    @error('address')
-                        <div class="alert alert-danger mt-2">
-                            {{ $message }}
-                        </div>
-                    @enderror
-                </div>
-                </div>
-                </div>
+                @error('pic_name')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+            
+            <div class="form-group">
+                <label for="address">Address</label>
+                <textarea class="form-control @error('address') is-invalid @enderror" name="address" rows="5" placeholder="Masukkan address">{{ old('address', strip_tags($data['supplier']->address)) }}</textarea>
 
-               
+                @error('address')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
 
-                <div class="form-group">
-                    <button type="submit" class="btn btn-md btn-primary mr-3">UPDATE</button>
-                    <button type="reset" class="btn btn-md btn-warning">RESET</button>
-                </div>
-                </form>
+            <div class="form-group">
+                <label for="phone">Phone</label>
+                <input type="number" class="form-control form-control-user @error('phone') is-invalid @enderror" id="phone"
+                placeholder="Masukkan phone" value="{{ old('phone', $data['supplier']->phone) }}" name="phone" required autocomplete="phone">
 
-                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-                <script src="https://cdn.ckeditor.com/4.13.1/standard/ckeditor.js"></script>
-                <script>
-                    CKEDITOR.replace('address');
-                </script>
-                </body>
-                </html>
+                @error('phone')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <button class="btn btn-outline-primary">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+@endsection

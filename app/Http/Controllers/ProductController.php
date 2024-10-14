@@ -31,10 +31,18 @@ class ProductController extends Controller
         $product = new Product;
         $products = $product->get_product()
                             ->latest()
-                            ->paginate(10);
+                            ->get();
 
         // render view with products
         return view('products.index', compact('products'));
+    }
+
+    public function indexc() : View
+    {
+        $product = new Product;
+        $products = $product->get_product()->latest()->get();
+
+        return view('indexc', compact('products'));
     }
 
     /**

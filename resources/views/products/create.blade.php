@@ -1,97 +1,117 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Add New Products</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body style="background-image: url(https://blog-asset.jakmall.com/2023/12/TWICEJKT23_Poster4x5-1448x2048.png);background-size: auto;background-position: center; " >
+@extends('admin.layouts.master')
 
-    <div class="container mt-5 mb-5">
-        <div class="row">
-            <div class="col-md-12">
-                <h3 style="color:white; text-align:center; margin-bottom:10px;">Add New Products</h3>
-                <div class="card border-0 shadow-sm rounded">
-                    <div class="card-body">
-                        <form id="productForm" action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
-                        
-                            @csrf
+@section('content')
+<h1 class="h3 mb-2 text-gray-800">Add Form</h1>
 
-                            <div class="form-group mb-3">
-                                <label class="font-weight-bold">IMAGE</label>
-                                <input type="file" class="form-control @error('image') is-invalid @enderror" name="image">
-                            </div>
-
-                            <div class="form-group mb-3">
-                                <label for="product_category_id">Product Category</label>
-                                <select class="form-control" id="product_category_id" name="product_category_id">
-                                    <option value="">-- Select Category Product --</option>
-                                    @foreach ($data['categories'] as $category)
-                                        <option value="{{ $category->id }}">{{ $category->product_category_name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="form-group mb-3">
-                                <label for="id_supplier">Supplier</label>
-                                <select class="form-control" id="id_supplier" name="id_supplier">
-                                    <option value="">-- Select Supplier --</option>
-                                    @foreach ($data['suppliers_'] as $supplier)
-                                        <option value="{{ $supplier->id }}">{{ $supplier->supplier_name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-
-                            <div class="form-group mb-3">
-                                <label class="font-weight-bold">TITLE</label>
-                                <input type="text" class="form-control @error('title') is-invalid @enderror" name="title"  placeholder="Masukkan Judul Product">
-                            </div>
-
-                            <div class="form-group mb-3">
-                                <label class="font-weight-bold">DESCRIPTION</label>
-                                <textarea class="form-control @error('description') is-invalid @enderror" name="description" rows="5" placeholder="Masukkan Description Product"></textarea>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group mb-3">
-                                        <label class="font-weight-bold">PRICE</label>
-                                        <input type="number" class="form-control @error('price') is-invalid @enderror" name="price" placeholder="Masukkan Harga Product">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group mb-3">
-                                        <label class="font-weight-bold">STOCK</label>
-                                        <input type="number" class="form-control @error('stock') is-invalid @enderror" name="stock" placeholder="Masukkan Stock Product">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <button type="submit" class="btn btn-md btn-primary me-3">SAVE</button>
-                            <button type="button" id="resetBtn" onclick="resetForm()" class="btn btn-md btn-warning">RESET</button>
-
-                        </form> 
-                    </div>
-                </div>
-            </div>
+@if(Session::has('success'))
+    <div class="card mb-4 py-3 border-left-primary">
+        <div class="card-body">
+            {{Session::get('success')}}
         </div>
     </div>
+@endif
+<div class="card shadow mb-4">
+    
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Add Product</h6>
+    </div>
+    <div class="card-body">
+        <form action="{{route('products.store')}}" method="post" enctype="multipart/form-data">
+        @csrf
+            <div class="form-group">
+                <label for="image">Image</label>
+                <input type="file" class="form-control form-control-user @error('image') is-invalid @enderror" id="image" name="image">
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.ckeditor.com/4.13.1/standard/ckeditor.js"></script>
-    <script>
-        CKEDITOR.replace( 'description' );
+                @error('image')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
 
-        function resetForm() {
-            document.getElementById("productForm").reset(); // Mereset semua nilai dalam form
+            <div class="form-group">
+                <label for="product_category_id">Category</label>
+                <select name="product_category_id" class="form-control @error('product_category_id') is-invalid @enderror">
+                    <option value="">-- Select Category Product --</option>
+                    @foreach ($data['categories'] as $category)
+                        <option value="{{ $category->id }}">{{ $category->product_category_name }}</option>
+                    @endforeach
+                </select>
 
-            // Reset CKEditor content to empty
-            for (var instance in CKEDITOR.instances) {
-                CKEDITOR.instances[instance].setData('');  // Reset CKEditor content
-            }
-        }
-    </script>
-</body>
-</html>
+                @error('product_category_id')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+            
+            <div class="form-group">
+                <label for="id_supplier">Supplier</label>
+                <select name="id_supplier" class="form-control @error('id_supplier') is-invalid @enderror">
+                    <option value="">-- Select Supplier --</option>
+                    @foreach ($data['suppliers_'] as $supplier)
+                        <option value="{{ $supplier->id }}">{{ $supplier->supplier_name }}</option>
+                    @endforeach
+                </select>
+
+                @error('id_supplier')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" class="form-control form-control-user @error('title') is-invalid @enderror" id="title"
+                placeholder="Masukkan title product" name="title" required autocomplete="title">
+
+                @error('title')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea class="form-control @error('description') is-invalid @enderror" name="description" rows="5" placeholder="Masukkan description product"></textarea>
+
+                @error('description')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="price">Price</label>
+                <input type="number" class="form-control form-control-user @error('price') is-invalid @enderror" id="price"
+                placeholder="Masukkan price" name="price" required autocomplete="price">
+
+                @error('price')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+            
+            <div class="form-group">
+                <label for="stock">Stock</label>
+                <input type="number" class="form-control form-control-user @error('stock') is-invalid @enderror" id="stock"
+                placeholder="Masukkan stock" name="stock" required autocomplete="stock">
+
+                @error('stock')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <button class="btn btn-outline-primary">Create</button>
+            </div>
+        </form>
+    </div>
+</div>
+@endsection
