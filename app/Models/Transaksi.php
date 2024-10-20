@@ -42,9 +42,4 @@ class Transaksi extends Model
         return $sql;
     }   
 
-    // public function get_category_product(){
-    //     $sql = DB::table ('category_product')->select('*');
-        
-    //     return $sql;
-    // }
 }

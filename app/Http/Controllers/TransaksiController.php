@@ -17,7 +17,6 @@ class TransaksiController extends Controller
     public function index()
     {
         
-        // $transaksis = Transaksi::with(['detailTransaksi', 'product'])->paginate(10);
         $transaksismodel = new Transaksi;
         $transaksis = $transaksismodel->get_transaksi()->get();
         return view('transaksis.index', compact('transaksis'));
