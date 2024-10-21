@@ -44,9 +44,9 @@ class SupplierController extends Controller
         $validatedData = $request->validate([
             'supplier_name'         => 'required',
             'address_supp'          => 'required|min:5',
-            'phone'                 => 'required|min:5',
+            'phone'                 => 'required|numeric|min:5',
             'address'               => 'required|min:5',
-            'phone_supp'            => 'required|min:5'
+            'phone_supp'            => 'required|numeric|min:5'
         ]);
         //create Product
         Supplier::create([
