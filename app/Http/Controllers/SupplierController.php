@@ -42,11 +42,11 @@ class SupplierController extends Controller
     { 
         //validate from
         $validatedData = $request->validate([
-            'supplier_name'         => 'required',
-            'address_supp'          => 'required|min:5',
-            'phone'                 => 'required|numeric|min:5',
-            'address'               => 'required|min:5',
-            'phone_supp'            => 'required|numeric|min:5'
+            'supplier_name'         => 'required|string|min:3|max:100',
+            'address_supp'          => 'required|string|min:5|max:255',
+            'phone'                 => 'required|digits_between:10,15',
+            'address'               => 'required|string|min:5|max:255',
+            'phone_supp'            => 'required|digits_between:10,15'
         ]);
         //create Product
         Supplier::create([
@@ -108,12 +108,11 @@ class SupplierController extends Controller
          {
              // Validasi input
              $request->validate([
-                 'supplier_name' => 'required|min:5',
-                 'address_supp' => 'required|min:5',
-                 'phone_supp' => 'required|numeric',
-                 'pic_name' => 'required|min:5',
-                 'phone' => 'required|numeric',
-                 'address' => 'required|min:5',
+                'supplier_name'         => 'required|string|min:3|max:100',
+                'address_supp'          => 'required|string|min:5|max:255',
+                'phone'                 => 'required|digits_between:10,15',
+                'address'               => 'required|string|min:5|max:255',
+                'phone_supp'            => 'required|digits_between:10,15'
              ]);
              
              // Temukan supplier berdasarkan ID

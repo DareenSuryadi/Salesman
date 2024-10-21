@@ -21,8 +21,7 @@
             @method('PUT')
             <div class="form-group mb-3">
                 <label for="id_product">Product</label>
-                <select class="form-control" name="id_product" id="id_product" required>
-                    <option value="">-- Select Product --</option>
+                <select class="form-control" name="id_product" id="id_product" required disabled>
                     @foreach ($transaksis as $transaksi)
                         <option value="{{ $transaksi->id_product }}"
                             @if(old('id_product', $transaksi->id_product) == $transaksi->id_product) selected @endif>
