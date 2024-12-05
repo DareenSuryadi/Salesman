@@ -32,19 +32,19 @@ return new class extends Migration
         Schema::create('suppliers', function (Blueprint $table) {
             $table->id();
             $table->string('supplier_name');
-            $table->text('address_supp');
-            $table->string('phone_supp');
-            $table->string('pic_name');
-            $table->string('phone');
-            $table->text('address');
+            $table->string('nama_negara', 50);
+            $table->string('nama_kota', 100);
+            $table->text('alamat');
+            $table->bigInteger('no_telp');
             $table->timestamps();
         });
         
         Schema::create('transaksis', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_kasir');
+            $table->foreignId('id_user')->nullable()->index();
             $table->timestamp('tanggal_transaksi');
             $table->integer('diskon')->default(0);
+            $table->enum('status', ['Unpaid', 'Process', 'Done'])->default('Unpaid');
             $table->timestamps();
         });
         
@@ -53,6 +53,14 @@ return new class extends Migration
             $table->foreignId('id_transaksi')->nullable()->index();
             $table->foreignId('id_product')->nullable()->index();
             $table->integer('jumlah_pembelian');
+            $table->timestamps();
+        });
+        
+        Schema::create('ulasan', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('id_transaksi')->nullable()->index();
+            $table->text('ulasan');
+            $table->enum('rating', ['1', '2', '3', '4', '5'])->nullable();
             $table->timestamps();
         });
     
