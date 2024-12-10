@@ -17,6 +17,11 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->bigInteger('no_telp')->nullable();
+            $table->string('nama_provinsi')->nullable();
+            $table->string('nama_kota')->nullable();
+            $table->text('alamat')->nullable();
+            $table->mediumInteger('kode_pos')->nullable();
             $table->rememberToken();
             $table->enum('role', ['admin', 'customer'])->default('customer');
             $table->timestamps();
