@@ -1,39 +1,43 @@
 @extends('admin.layouts.master')
 
 @section('content')
-<h1 class="h3 mb-2 text-gray-800">Details</h1>
+<div class="container">
+    <h2>Detail Transaksi</h2>
 
-<div class="card shadow mb-4">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Transaksi ID: {{ $transaksi->id }}</h5>            
+            <p><strong>Tanggal Transaksi:</strong> {{ $transaksi->tanggal_transaksi }}</p>
+            <p><strong>Diskon:</strong> {{ $transaksi->diskon }}%</p>
+            <p><strong>Status:</strong> {{ $transaksi->status }}</p>
+        </div>
+    </div>
+    <br><br>
+    <h3>Detail Produk</h3>
+    <div class="card">
+        
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nama Produk</th>
+                <th>Jumlah Pembelian</th>
+                <th>Harga</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($detailTransaksis as $detail)
+                <tr>
+                    <td>{{ $detail->title }}</td>
+                    <td>{{ $detail->jumlah_pembelian }}</td>
+                    <td>{{ number_format($detail->price * $detail->jumlah_pembelian - $detail->price * $detail->jumlah_pembelian * $transaksi->diskon/100, 2) }}</td>
+                    <td>{{ $transaksi->status}}</td>
+
+                </tr>
+            @endforeach
+            </div>
     
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Detail Transaksi</h6>
-    </div>
-    <div class="card-body">
-        <h3>ID : {{ $transaksis->id }}</h3>
-        <hr>
-        <p>Nama Produk : {{ $transaksis->title }}</p>
-        <hr>
-        <p>Nama Kasir : {{ $transaksis->nama_kasir  }}</p>
-        <hr>
-        <p>Quantity: {{ $transaksis->jumlah_pembelian }}</p>
-        <hr>
-        <p>Discount: {{ $transaksis->diskon }}%</p>
-        <hr>
-        <p>Total harga : @if(isset($transaksis->price) && isset($transaksis->jumlah_pembelian) && isset($transaksis->diskon))
-            @php
-                // Menghitung total harga sebelum diskon
-                $totalHarga = $transaksis->price * $transaksis->jumlah_pembelian;
-                // Menghitung nilai diskon
-                $diskon = $totalHarga * ($transaksis->diskon / 100);
-                // Menghitung total setelah diskon
-                $totalSetelahDiskon = $totalHarga - $diskon;
-            @endphp
-            {{ number_format($totalSetelahDiskon, 2) }}
-        @else
-            Data tidak lengkap
-        @endif
-        <hr>
-        <p>Transaction Date: {{ $transaksis->tanggal_transaksi }}</p>
-    </div>
+        </tbody>
+    </table>
 </div>
 @endsection

@@ -27,10 +27,12 @@
                 <thead>
                     <tr>
                         <th scope="col">Nama Supplier</th>
-                        <th scope="col">Adress Supplier</th>
+                        <th scope="col">Nama Kota Supplier</th>
+                        <th scope="col">Nama Negara Supplier</th>
+                        <th scope="col">Nama Provinsi Supplier</th>
+                        <th scope="col">Kode Pos</th>
                         <th scope="col">Phone Supplier</th>
                         <th scope="col">Nama PIC</th>
-                        <th scope="col">Address</th>
                         <th scope="col">Phone</th>
                         <th scope="col" style="width: 20%">Action</th>
                     </tr>
@@ -39,11 +41,13 @@
                     @forelse ($suppliers as $supplier)
                         <tr>
                             <td>{{ $supplier->supplier_name }}</td>
-                            <td>{{ $supplier->address_supp }}</td>
+                            <td>{{ $supplier->nama_kota_supp }}</td>
+                            <td>{{ $supplier->nama_negara_supp }}</td>
+                            <td>{{ $supplier->nama_provinsi_supp }}</td>
+                            <td>{{ $supplier->kode_pos }}</td>
                             <td>{{ $supplier->phone_supp }}</td>
                             <td>{{ $supplier->pic_name }}</td>
-                            <td>{{ $supplier->address }}</td>
-                            <td>{{ $supplier->phone }}</td>
+                            <td>{{ $supplier->phone_pic }}</td>
                             <td class="text-center">
                                 <a href="{{route('suppliers.show', [$supplier->id])}}">
                                     <button class="btn btn-primary">

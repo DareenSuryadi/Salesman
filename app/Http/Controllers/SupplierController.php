@@ -9,147 +9,65 @@ use Illuminate\Http\RedirectResponse;
 
 class SupplierController extends Controller
 {
-    /**
-     * Menampilkan daftar supplier
-     *
-     * @return View
-     */
-    public function index() : View
+    public function index(): View
     {
-        // Ambil semua supplier
         $suppliers = Supplier::latest()->get();
-
-        // Render view dengan data supplier
         return view('suppliers.index', compact('suppliers'));
     }
 
-    /**
-     * create
-     * 
-     * @return View
-     */
-
-    public function create():View
+    public function create(): View
     {
-        $supplier = new Supplier;
-        
-        $data['suppliers'] = $supplier->get_supplier()->get();
-
-        return view('suppliers.create', compact('data'));
+        return view('suppliers.create');
     }
 
-    public function store(Request $request):RedirectResponse
-    { 
-        //validate from
+    public function store(Request $request): RedirectResponse
+    {
         $validatedData = $request->validate([
-            'supplier_name'         => 'required|string|min:3|max:100',
-            'address_supp'          => 'required|string|min:5|max:255',
-            'phone'                 => 'required|digits_between:10,15',
-            'address'               => 'required|string|min:5|max:255',
-            'phone_supp'            => 'required|digits_between:10,15'
-        ]);
-        //create Product
-        Supplier::create([
-            'supplier_name'         => $request->supplier_name,
-            'address_supp'          => $request->address_supp,
-            'pic_name'              => $request->pic_name,
-            'phone'                 => $request->phone,
-            'address'               => $request->address,
-            'phone_supp'            => $request->phone_supp
+            'supplier_name'      => 'required|string|min:3|max:100',
+            'nama_kota_supp'     => 'required|string|min:3|max:100',
+            'nama_negara_supp'   => 'required|string|min:5|max:255',
+            'nama_provinsi_supp' => 'required|string|min:5|max:255',
+            'kode_pos'           => 'required|digits:5',
+            'phone_supp'         => 'required|digits_between:10,15',
+            'pic_name'           => 'required|string|min:3|max:255',
+            'phone_pic'          => 'required|digits_between:10,15',
         ]);
 
-        //redirect to index
-        return redirect()->route('suppliers.index')->with(['success' => 'Data berhasil disimpan!']);
+        Supplier::create($validatedData);
+
+        return redirect()->route('suppliers.index')->with('success', 'Data berhasil disimpan!');
     }
 
-           /**
-         * 
-         * show
-         * 
-         * @param mixed $id
-         * @return View
-         */
+    public function edit(string $id): View
+    {
+        $supplier = Supplier::findOrFail($id);
+        return view('suppliers.edit', compact('supplier'));
+    }
 
-         public function show(string $id): View
-         {
-            $supplier_model = new Supplier;
-            $supplier = $supplier_model->get_supplier()->where("suppliers.id" , $id)->FirstOrFail();
-            
-            return view('suppliers.show', compact('supplier')); 
-         } 
+    public function update(Request $request, $id): RedirectResponse
+    {
+        $validatedData = $request->validate([
+            'supplier_name'      => 'required|string|min:3|max:100',
+            'nama_kota_supp'     => 'required|string|min:3|max:100',
+            'nama_negara_supp'   => 'required|string|min:5|max:255',
+            'nama_provinsi_supp' => 'required|string|min:5|max:255',
+            'kode_pos'           => 'required|digits:5',
+            'phone_supp'         => 'required|digits_between:10,15',
+            'pic_name'           => 'required|string|min:3|max:255',
+            'phone_pic'          => 'required|digits_between:10,15',
+        ]);
 
-     /**
-         * 
-         * edit
-         * 
-         * @param mixed $id
-         * @return View
-         */
+        $supplier = Supplier::findOrFail($id);
+        $supplier->update($validatedData);
 
-         public function edit(string $id): View
-         {
-            $supplier_model = new Supplier;
-            $data['supplier'] = $supplier_model->get_supplier()->where("suppliers.id" , $id)->FirstOrFail();
-            
-            $supplier_model = new Supplier;
-            $data['suppliers_'] = $supplier_model->get_supplier()->get();
-            return view('suppliers.edit', compact('data')); 
-         } 
-    /**
-         * 
-         * update
-         * 
-         * @param mixed $request
-         * @param mixed $id
-         * @return View
-         */
+        return redirect()->route('suppliers.index')->with('success', 'Data berhasil diperbarui!');
+    }
 
-         public function update(Request $request, $id): RedirectResponse
-         {
-             // Validasi input
-             $request->validate([
-                'supplier_name'         => 'required|string|min:3|max:100',
-                'address_supp'          => 'required|string|min:5|max:255',
-                'phone'                 => 'required|digits_between:10,15',
-                'address'               => 'required|string|min:5|max:255',
-                'phone_supp'            => 'required|digits_between:10,15'
-             ]);
-             
-             // Temukan supplier berdasarkan ID
-             $supplier = Supplier::where("suppliers.id", $id)->firstOrFail();
-         
-             // Update data supplier
-             $supplier->update([
-                 'supplier_name' => $request->supplier_name,
-                 'address_supp' => $request->address_supp,
-                 'phone_supp' => $request->phone_supp,
-                 'pic_name' => $request->pic_name,
-                 'phone' => $request->phone,
-                 'address' => $request->address,
-             ]);
-         
-             // Redirect dengan pesan sukses
-             return redirect()->route('suppliers.index')->with(['success' => 'Data Berhasil Diubah!']);
-         }
-         
-         /**
-         * 
-         * destroy
-         * 
-         * @param mixed $id
-         * @return RedirectResponse
-         */
+    public function destroy($id): RedirectResponse
+    {
+        $supplier = Supplier::findOrFail($id);
+        $supplier->delete();
 
-         public function destroy($id): RedirectResponse
-         {
-             // Mencari supplier berdasarkan ID
-             $supplier = Supplier::where("id", $id)->firstOrFail();
-            
-             $supplier->delete();
-         
-             // Mengalihkan kembali ke index dengan pesan sukses
-             return redirect()->route('suppliers.index')->with(['success' => 'Data Berhasil Dihapus!']); 
-         }
-         
-
+        return redirect()->route('suppliers.index')->with('success', 'Data berhasil dihapus!');
+    }
 }

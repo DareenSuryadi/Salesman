@@ -24,3 +24,5 @@ Route::post('/register', [\App\Http\Controllers\RegisterController::class, 'regi
 Route::get('/login', [\App\Http\Controllers\LoginController::class, 'loginForm'])->name('login');
 Route::post('/login', [\App\Http\Controllers\LoginController::class, 'login']);
 Route::post('/logout', [\App\Http\Controllers\LoginController::class, 'logout'])->name('logout');
+Route::get('/send-email/{to}/{Id}', [\App\Http\Controllers\TransaksiController::class,'sendemail']);
+Route::get('/dashboard', [TransaksiController::class, 'dashboard'])->name('dashboard.customer')->middleware('auth');

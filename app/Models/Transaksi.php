@@ -4,7 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Product;
-
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class Transaksi extends Model
 {
@@ -13,10 +14,12 @@ class Transaksi extends Model
     protected $fillable = [
         'id',
         'tanggal_transaksi',
-        'nama_kasir',
         'diskon',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'status',
+        'id_user',
+        'bukti_transaksi',
     ];
 
     // Relasi ke DetailTransaksi
@@ -34,12 +37,20 @@ class Transaksi extends Model
                             "products.price as price", 
                             "products.stock as stock",
                             "detail_transaksi.id_product as id_product", 
-                            "detail_transaksi.jumlah_pembelian as jumlah_pembelian"
+                            "detail_transaksi.jumlah_pembelian as jumlah_pembelian",
+                            "users.email"
                         )
                         ->join('detail_transaksi', 'detail_transaksi.id_transaksi', '=', 'transaksis.id')
+                        ->join('users', 'users.id', '=', 'transaksis.id_user')
                         ->join('products', 'products.id', '=', 'detail_transaksi.id_product')
                         ->join('category_product', 'category_product.id', '=', 'products.product_category_id');
         return $sql;
     }   
 
+    
+    public function user()
+{
+    return $this->belongsTo(User::class, 'id_user');
+}
+    
 }

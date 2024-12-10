@@ -16,7 +16,7 @@
         <h6 class="m-0 font-weight-bold text-primary">Add Product</h6>
     </div>
     <div class="card-body">
-        <form action="{{route('products.store')}}" method="post" enctype="multipart/form-data">
+        <form id= "productForm" action="{{route('products.store')}}" method="post" enctype="multipart/form-data">
         @csrf
             <div class="form-group">
                 <label for="image">Image</label>
@@ -110,8 +110,24 @@
 
             <div class="form-group">
                 <button class="btn btn-outline-primary">Create</button>
+                <button type="button" id="resetBtn" onclick="resetForm()" class="btn btn-md btn-warning" style>RESET</button>
+
             </div>
         </form>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.ckeditor.com/4.13.1/standard/ckeditor.js"></script>
+    <script>
+        CKEDITOR.replace( 'description' );
+
+        function resetForm() {
+            document.getElementById("productForm").reset(); // Mereset semua nilai dalam form
+
+            // Reset CKEditor content to empty
+            for (var instance in CKEDITOR.instances) {
+                CKEDITOR.instances[instance].setData('');  // Reset CKEditor content
+            }
+        }
+    </script>
 @endsection

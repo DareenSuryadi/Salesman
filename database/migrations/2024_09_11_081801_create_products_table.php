@@ -31,6 +31,10 @@ return new class extends Migration
         
         Schema::create('suppliers', function (Blueprint $table) {
             $table->id();
+            $table->string('nama_kota_supp');
+            $table->string('nama_negara_supp');
+            $table->string('nama_provinsi_supp');
+            $table->int('kode_pos');
             $table->string('supplier_name');
             $table->text('address_supp');
             $table->string('phone_supp');

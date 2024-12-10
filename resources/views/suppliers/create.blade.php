@@ -30,11 +30,46 @@
                 @enderror
             </div>
 
-            <div class="form-group">
-                <label for="address_supp">Address Supplier</label>
-                <textarea class="form-control @error('address_supp') is-invalid @enderror" name="address_supp" rows="5" placeholder="Masukkan address supplier"></textarea>
+            <div class="form-group row">
+    <div class="col-md-6">
+        <label for="nama_negara_supp">Nama Negara Supplier</label>
+        <input type="text" class="form-control @error('nama_negara_supp') is-invalid @enderror" name="nama_negara_supp" rows="3" placeholder="Masukkan negara supplier"></input>
 
-                @error('address_supp')
+        @error('nama_negara_supp')
+            <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+            </span>
+        @enderror
+    </div>
+
+    <div class="col-md-6">
+        <label for="nama_provinsi_supp">Nama Provinsi Supplier</label>
+        <input type="text" class="form-control @error('nama_provinsi_supp') is-invalid @enderror" name="nama_provinsi_supp" rows="3" placeholder="Masukkan provinsi supplier"></input>
+
+        @error('nama_provinsi_supp')
+            <span class="invalid-feedback" role="alert">
+                <strong>{{ $message }}</strong>
+            </span>
+        @enderror
+    </div>
+</div>
+
+            <div class="form-group">
+                <label for="nama_kota_supp">Nama Kota Supplier</label>
+                <input type="text" class="form-control @error('nama_kota_supp') is-invalid @enderror" name="nama_kota_supp" rows="5" placeholder="Masukkan kota supplier"></textarea>
+
+                @error('nama_kota_supp')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="kode_pos">Kode Pos</label>
+                <input type="number" class="form-control @error('kode_pos') is-invalid @enderror" name="kode_pos" rows="5" placeholder="Masukkan kode pos"></textarea>
+
+                @error('kode_pos')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
@@ -64,24 +99,13 @@
                     </span>
                 @enderror
             </div>
-            
+           
             <div class="form-group">
-                <label for="address">Address</label>
-                <textarea class="form-control @error('address') is-invalid @enderror" name="address" rows="5" placeholder="Masukkan address"></textarea>
+                <label for="phone_pic">Phone</label>
+                <input type="number" class="form-control form-control-user @error('phone_pic') is-invalid @enderror" id="phone_pic"
+                placeholder="Masukkan phone pic" name="phone_pic" required autocomplete="phone_pic">
 
-                @error('address')
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                @enderror
-            </div>
-
-            <div class="form-group">
-                <label for="phone">Phone</label>
-                <input type="number" class="form-control form-control-user @error('phone') is-invalid @enderror" id="phone"
-                placeholder="Masukkan phone" name="phone" required autocomplete="phone">
-
-                @error('phone')
+                @error('phone_pic')
                     <span class="invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>

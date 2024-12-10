@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Models\Transaksi;
 
 class User extends Authenticatable
 {
@@ -20,6 +21,12 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'no_telp',
+        'nama_kota',
+        'nama_provinsi',
+        'alamat',
+        'kode_pos',
     ];
 
     /**
@@ -44,4 +51,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function transaksi()
+    {
+        return $this->hasMany(Transaksi::class, 'id_user');
+    }
 }
+

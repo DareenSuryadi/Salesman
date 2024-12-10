@@ -55,6 +55,67 @@
                 @enderror
             </div>
 
+            <div class="form-group">
+            <label for="no_telp">Phone</label>
+                <input type="number" class="form-control form-control-user @error('no_telp') is-invalid @enderror" id="no_telp"
+                placeholder="Phone" name="no_telp" required autocomplete="no_telp" autofocus value="{{ Auth::user()->no_telp }}">
+
+                @error('no_telp')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="form-group">
+            <label for="alamat">Address</label>
+                <input type="text" class="form-control form-control-user @error('alamat') is-invalid @enderror" id="alamat"
+                placeholder="Your Address" name="alamat" required autocomplete="alamat" autofocus value="{{ Auth::user()->alamat }}">
+
+                @error('alamat')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="form-group">
+            <label for="nama_provinsi">Provinsi</label>
+                <input type="text" class="form-control form-control-user @error('nama_provinsi') is-invalid @enderror" id="nama_provinsi"
+                placeholder="Your Province" name="nama_provinsi" required autocomplete="nama_provinsi" autofocus value="{{ Auth::user()->nama_provinsi }}">
+
+                @error('nama_provinsi')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="form-group">
+            <label for="nama_kota">Kota</label>
+                <input type="text" class="form-control form-control-user @error('nama_kota') is-invalid @enderror" id="nama_kota"
+                placeholder="Your City" name="nama_kota" required autocomplete="nama_kota" autofocus value="{{ Auth::user()->nama_kota }}">
+
+                @error('nama_kota')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+            
+            <div class="form-group">
+            <label for="kode_pos">Kode Pos</label>
+                <input type="number" class="form-control form-control-user @error('kode_pos') is-invalid @enderror" id="kode_pos"
+                placeholder="Pos Code" name="kode_pos" required autocomplete="kode_pos" autofocus value="{{ Auth::user()->kode_pos }}">
+
+                @error('kode_pos')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+
             @if(Auth::user()->role === 'admin')
             <div class="form-group">
                 <label for="role">Role</label>

@@ -71,6 +71,68 @@
             </div>
 
             <div class="form-group">
+                <label for="no_telp">Handphone</label>
+                <input type="number" class="form-control form-control-user @error('no_telp') is-invalid @enderror" id="no_telp"
+                placeholder="Handphone" name="no_telp" required autocomplete="no_telp" autofocus value="{{$users->no_telp}}">
+
+                @error('no_telp')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="alamat">Address</label>
+                <input type="text" class="form-control form-control-user @error('alamat') is-invalid @enderror" id="alamat"
+                placeholder="Your Address" name="alamat" required autocomplete="alamat" autofocus value="{{$users->alamat}}">
+
+                @error('alamat')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="nama_provinsi">Provinsi</label>
+                <input type="text" class="form-control form-control-user @error('nama_provinsi') is-invalid @enderror" id="nama_provinsi"
+                placeholder="Your Province" name="nama_provinsi" required autocomplete="nama_provinsi" autofocus value="{{$users->nama_provinsi}}">
+
+                @error('nama_provinsi')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="nama_kota">Kota</label>
+                <input type="text" class="form-control form-control-user @error('nama_kota') is-invalid @enderror" id="nama_kota"
+                placeholder="Your City" name="nama_kota" required autocomplete="nama_kota" autofocus value="{{$users->nama_kota}}">
+
+                @error('nama_kota')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="nama_kota">Kode Pos</label>
+                <input type="number" class="form-control form-control-user @error('kode_pos') is-invalid @enderror" id="kode_pos"
+                placeholder="Pos Code" name="kode_pos" required autocomplete="kode_pos" autofocus value="{{$users->kode_pos}}">
+
+                @error('kode_pos')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+
+
+            <div class="form-group">
                 <button class="btn btn-outline-primary">Update</button>
             </div>
         </form>

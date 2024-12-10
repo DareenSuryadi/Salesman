@@ -52,6 +52,13 @@
                 </a>
             </li>
 
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('transaksis.index') }}">
+                    <i class="fas fa-fw fa-print"></i>
+                    <span>Transaksi</span>
+                </a>
+            </li>
+
             @elseif (Auth::user()->role == 'admin')
             <div class="sidebar-heading">
                 Administrator

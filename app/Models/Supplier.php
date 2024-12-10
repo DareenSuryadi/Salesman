@@ -11,12 +11,14 @@ class Supplier extends Model
 
     // Menentukan kolom yang dapat diisi secara massal
     protected $fillable = [
-        'supplier_name',
-        'address_supp',
+        'supplier_name', 
+        'nama_kota_supp',
+        'nama_negara_supp',
+        'nama_provinsi_supp',
+        'kode_pos',
         'phone_supp',
         'pic_name',
-        'phone',
-        'address',
+        'phone_pic',
     ];
 
        /**
@@ -30,5 +32,3 @@ class Supplier extends Model
         return self::select('*');
     }
 }
-
-  

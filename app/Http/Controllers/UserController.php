@@ -25,12 +25,23 @@ class UserController extends Controller
             'name' => 'required', 'string', 'max:255',
             'email' => 'required', 'string', 'email', 'max:255', 'unique:users',
             'password' => 'required', 'string', 'min:5', 'confirmed',
+            'no_telp' =>  'required|digits_between:10,15',
+            'alamat'    =>  'required|string|min:5|max:255',
+            'nama_provinsi' =>  'required|string|min:5|max:255',
+            'nama_kota' =>  'required|string|min:5|max:255',
+            'kode_pos'  => 'required|digits_between:1,10',
+
         ]);
 
         User::create([
             'name'=>$request->get('name'),
             'email'=>$request->get('email'),
             'password'=> Hash::make($request->get('password')),
+            'no_telp'=>$request->get('no_telp'),
+            'alamat'=>$request->get('alamat'),
+            'nama_provinsi'=>$request->get('nama_provinsi'),
+            'nama_kota'=>$request->get('nama_kota'),
+            'kode_pos'=>$request->get('kode_pos'),
             'role'=>$request->get('role'),
         ]);
         return redirect()->back()->with('message', 'User berhasil ditambahkan');
@@ -53,11 +64,21 @@ class UserController extends Controller
             'name' => 'required', 'string', 'max:255',
             'email' => 'required', 'string', 'email', 'max:255', 'unique:users',
             'password' => 'nullable', 'string', 'min:5', 'confirmed',
+           'no_telp' =>  'required|digits_between:10,15',
+           'alamat'    =>  'required|string|min:5|max:255',
+           'nama_provinsi' =>  'required|string|min:5|max:255',
+           'nama_kota' =>  'required|string|min:5|max:255',
+           'kode_pos'  => 'required|digits_between:1,10',
         ]);
         
         $users = User::find($id);
         $users->name = $request->get('name');
         $users->email = $request->get('email');
+        $users->no_telp = $request->get('no_telp');
+        $users->alamat = $request->get('alamat');
+        $users->nama_provinsi = $request->get('nama_provinsi');
+        $users->nama_kota = $request->get('nama_kota');
+        $users->kode_pos = $request->get('kode_pos');
         if ($request->filled('password')) {
             $users->password = Hash::make($request->get('password'));
         }

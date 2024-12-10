@@ -55,6 +55,63 @@
             </div>
 
             <div class="form-group">
+                <label for="name">Handphone</label>
+                <input type="number" class="form-control form-control-user @error('no_telp') is-invalid @enderror" id="no_telp"
+                placeholder="Handphone" name="no_telp" value="{{ old('no_telp') }}" required autocomplete="no_telp" autofocus>
+
+                @error('no_telp')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="alamat">Address</label>
+                <textarea class="form-control @error('alamat') is-invalid @enderror" name="alamat" rows="5" placeholder="Your Addrress"></textarea>
+
+                @error('alamat')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="nama_provinsi">Provinsi</label>
+                <textarea class="form-control @error('nama_provinsi') is-invalid @enderror" name="nama_provinsi" rows="5" placeholder="Your Province"></textarea>
+
+                @error('nama_provinsi')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="nama_kota">Kota</label>
+                <textarea class="form-control @error('nama_kota') is-invalid @enderror" name="nama_kota" rows="5" placeholder="Your City"></textarea>
+
+                @error('nama_kota')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="form-group">
+                <label for="kode_pos">Kode Pos</label>
+                <textarea class="form-control @error('kode_pos') is-invalid @enderror" name="kode_pos" rows="5" placeholder="Pos Code"></textarea>
+
+                @error('kode_pos')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+            
+
+            <div class="form-group">
                 <label for="role">Role</label>
                 <select name="role" class="form-control @error('role') is-invalid @enderror">
                     <option value="">Choose Role</option>

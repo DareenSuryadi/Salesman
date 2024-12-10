@@ -11,7 +11,7 @@
     <link href="{{asset('template/css/sb-admin-2.min.css')}}" rel="stylesheet">
 </head>
 
-<body class="bg-gradient-primary">
+<body style=" background-image : url(https://img.freepik.com/free-photo/violet-watercolor-texture-background_1083-172.jpg);  background-size: cover">
     
     @yield('content')
     <script src="{{asset('template/vendor/jquery/jquery.min.js')}}"></script>
