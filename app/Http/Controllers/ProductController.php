@@ -11,6 +11,7 @@ use Illuminate\view\view;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -120,6 +121,32 @@ class ProductController extends Controller
             
             return view('products.show', compact('product')); 
          } 
+
+              /**
+         * 
+         * show Pengguna
+         * 
+         * @param mixed $id
+         * @return View
+         */
+
+         public function showc(string $id): View
+         {
+            $product = Product::findOrFail($id);
+            
+            $averageRating = $product->ulasans->avg('rating');
+
+            $ulasan = DB::table('ulasan')
+                ->join('transaksis', 'transaksis.id', '=', 'ulasan.id_transaksi')
+                ->join('detail_transaksi', 'detail_transaksi.id_transaksi', '=', 'transaksis.id')
+                ->join('products', 'products.id', '=', 'detail_transaksi.id_product')
+                ->where('products.id', $id)
+                ->select('ulasan.*', 'transaksis.id as transaksi_id')
+                ->get();
+
+            return view('products.showc', compact('product', 'ulasan', 'averageRating')); 
+         } 
+
 
      /**
          * 

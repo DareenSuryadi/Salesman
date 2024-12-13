@@ -40,8 +40,8 @@
 						<nav id="navbar">
 							<div class="main-menu stellarnav">
 								<ul class="menu-list">
-									<li class="menu-item active"><a href="{{ route('index') }}">Home</a></li>
-									<li class="menu-item"><a href="{{ route('plist') }}" class="nav-link">Products</a></li>
+									<li class="menu-item"><a href="{{ route('index') }}">Home</a></li>
+									<li class="menu-item active"><a href="{{ route('plist') }}" class="nav-link">Products</a></li>
 									@guest
 										@if (Route::has('login'))
 											<li class="menu-item">
@@ -109,213 +109,47 @@
 
 	</div>
 
-	<section id="billboard">
-
+	<section class="product-details">
 		<div class="container">
 			<div class="row">
-				<div class="col-md-12">
-
-					<button class="prev slick-arrow">
-						<i class="icon icon-arrow-left"></i>
-					</button>
-
-					<div class="main-slider pattern-overlay">
-						@foreach ($products->take(5) as $product)
-						<div class="slider-item">
-							<div class="banner-content">
-							<a href="{{ route('product.details', $product->id) }}">
-								<h2 class="banner-title">{{ $product->title }}</h2>
-							</a>
-								<p>{{ $product->description }}.</p>
-								<div class="btn-wrap">
-									<a href="{{ route('plist') }}" class="btn btn-outline-accent btn-accent-arrow">More<i class="icon icon-ns-arrow-right"></i></a>
-								</div>
-							</div>
-							<a href="{{ route('product.details', $product->id) }}">
-							<img src="{{ asset('/storage/images/'.$product->image) }}" alt="banner" style="width:40%" class="">
-							</a>
-						</div>
-						@endforeach
-					</div>
-					<button class="next slick-arrow">
-						<i class="icon icon-arrow-right"></i>
-					</button>
-
+				<div class="col-md-6">
+					<!-- Gambar produk -->
+					<img src="{{ asset('/storage/images/'.$product->image) }}" alt="{{ $product->title }}" class="img-fluid">
 				</div>
-			</div>
-		</div>
-
-	</section>
-
-	<section id="featured-books" class="py-5 my-5">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-12">
-
-					<div class="section-header align-center">
-						<div class="title">
-							<span>Some quality items</span>
-						</div>
-						<h2 class="section-title">Featured Products</h2>
+				<div class="col-md-6">
+					<!-- Detail produk -->
+					<h2 id="title-0">{{ $product->title }}</h2>
+					<div class="rating">
+						<!-- Komponen untuk menampilkan rating rata-rata -->
+						@include('components.rating', ['rating' => $averageRating])
 					</div>
-
-					<div class="product-list" data-aos="fade-up">
-						<div class="row">
-
-							@foreach ($products->take(4) as $product)
-							<div class="col-md-3">
-								<div class="product-item">
-									<figure class="product-style">
-									<a href="{{ route('product.details', $product->id) }}">
-										<img src="{{ asset('/storage/images/'.$product->image) }}" alt="Books" class="product-item">
-									</a>
-										<button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
+					<p id="stock-0">Stock: {{ $product->stock }}</p>
+					<p id="price-0">Harga: {{ "Rp " . number_format($product->price, 2, ',', '.') }}</p>
+					<p>{{ $product->description }}</p>
+					<button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
 											Cart</button>
-									</figure>
-									<figcaption>
-									<a href="{{ route('product.details', $product->id) }}">
-										<h3>{{ $product->title }}</h3>
-									</a>
-										<span>{{ $product->description }}</span>
-										<div class="item-price">{{ "Rp " . number_format($product->price,2,',','.') }}</div>
-									</figcaption>
-								</div>
-							</div>
-							@endforeach
-						</div>
-					</div>
 				</div>
 			</div>
-
 			<div class="row">
-				<div class="col-md-12">
+    <div class="col-md-12">
+        <h3>Reviews</h3>
+        @forelse ($product->ulasans as $ulasan)
+            <div class="review">
+                <!-- Tampilkan nama pengguna atau fallback ke "Anonymous" -->
+                <p id="ulasan-0"><strong>{{ $ulasan->user->name ?? 'Anonymous' }}</strong> - {{ $ulasan->created_at->format('d M Y') }}</p>
+                <!-- Tampilkan rating -->
+                <div class="rating">
+                    @include('components.rating', ['rating' => $ulasan->rating])
+                </div>
+				<!-- Tampilkan isi ulasan -->
+                <p>{{ $ulasan->ulasan }}</p>
+            </div>
+        @empty
+            <p>Belum ada ulasan untuk produk ini.</p>
+        @endforelse
+    </div>
+</div>
 
-					<div class="btn-wrap align-right">
-						<a href="{{ route('plist') }}" class="btn-accent-arrow">View all products <i class="icon icon-ns-arrow-right"></i></a>
-					</div>
-
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<section id="best-selling" class="leaf-pattern-overlay">
-		<div class="corner-pattern-overlay"></div>
-		<div class="container">
-			<div class="row justify-content-center">
-
-				<div class="col-md-8">
-
-					<div class="row">
-						<h2 class="section-title divider">Best Selling Products</h2>
-						@foreach ($products->take(1) as $product)
-						<div class="col-md-6">
-							<figure class="products-thumb">
-							<a href="{{ route('product.details', $product->id) }}">
-								<img src="{{ asset('/storage/images/'.$product->image) }}" alt="book" class="single-image">
-							</a>
-							</figure>
-						</div>
-
-						<div class="col-md-6">
-							<div class="product-entry">
-
-								<div class="products-content">
-									<div class="author-name">{{ $product->category_product_name }}</div>
-									<a href="{{ route('product.details', $product->id) }}">
-										<h3 class="item-title">{{ $product->title }}</h3>
-									</a>
-									<p>{{ $product->description }}.</p>
-									<div class="item-price">{{ "Rp " . number_format($product->price,2,',','.') }}</div>
-									<div class="btn-wrap">
-										<a href="#" class="btn-accent-arrow">shop it now <i class="icon icon-ns-arrow-right"></i></a>
-									</div>
-								</div>
-								
-							</div>
-						</div>
-						@endforeach
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<section id="special-offer" class="bookshelf pb-5 mb-5">
-
-		<div class="section-header align-center">
-			<div class="title">
-				<span>Grab your opportunity</span>
-			</div>
-			<h2 class="section-title">Products with offer</h2>
-		</div>
-
-		<div class="container">
-			<div class="row">
-				<div class="inner-content">
-					<div class="product-list" data-aos="fade-up">
-						<div class="grid product-grid">
-							@foreach ($products->take(4) as $product)
-							<div class="product-item">
-								<figure class="product-style">
-								<a href="{{ route('product.details', $product->id) }}">
-									<img src="{{ asset('/storage/images/'.$product->image) }}" alt="Books" class="product-item">
-								</a>
-									<button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
-										Cart</button>
-								</figure>
-								<figcaption>
-								<a href="{{ route('product.details', $product->id) }}">
-									<h3>{{ $product->title }}</h3>
-								</a>
-									<span>{{ $product->description }}</span>
-									<div class="item-price">
-										<span class="prev-price">{{ "Rp " . number_format($product->price,2,',','.') }}</span>{{ "Rp " . number_format($product->price*0.8,2,',','.') }}
-									</div>
-								</figcaption>
-							</div>
-							@endforeach
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<section id="subscribe">
-		<div class="container">
-			<div class="row justify-content-center">
-
-				<div class="col-md-8">
-					<div class="row">
-
-						<div class="col-md-6">
-
-							<div class="title-element">
-								<h2 class="section-title divider">Subscribe to our newsletter</h2>
-							</div>
-
-						</div>
-						<div class="col-md-6">
-
-							<div class="subscribe-content" data-aos="fade-up">
-								<p>Sed eu feugiat amet, libero ipsum enim pharetra hac dolor sit amet, consectetur. Elit
-									adipiscing enim pharetra hac.</p>
-								<form id="form">
-									<input type="text" name="email" placeholder="Enter your email addresss here">
-									<button class="btn-subscribe">
-										<span>send</span>
-										<i class="icon icon-send"></i>
-									</button>
-								</form>
-							</div>
-
-						</div>
-
-					</div>
-				</div>
-
-			</div>
 		</div>
 	</section>
 
@@ -366,10 +200,19 @@
 						<h5>Discover</h5>
 						<ul class="menu-list">
 							<li class="menu-item">
-								<a href="{{ route('index') }}">Home</a>
+								<a href="#">Home</a>
 							</li>
 							<li class="menu-item">
-								<a href="{{ route('plist') }}">Products</a>
+								<a href="#">Books</a>
+							</li>
+							<li class="menu-item">
+								<a href="#">Authors</a>
+							</li>
+							<li class="menu-item">
+								<a href="#">Subjects</a>
+							</li>
+							<li class="menu-item">
+								<a href="#">Advanced Search</a>
 							</li>
 						</ul>
 					</div>
@@ -381,10 +224,7 @@
 						<h5>My account</h5>
 						<ul class="menu-list">
 							<li class="menu-item">
-								<a href="{{ route('login') }}">Log In</a>
-							</li>
-							<li class="menu-item">
-								<a href="{{ route('register') }}">Register</a>
+								<a href="#">Sign In</a>
 							</li>
 							<li class="menu-item">
 								<a href="#">View Cart</a>

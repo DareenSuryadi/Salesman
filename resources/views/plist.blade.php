@@ -133,11 +133,17 @@
                                     <div class="col-md-3">
                                         <div class="product-item">
                                             <figure class="product-style">
-                                                <img src="{{ asset('/storage/images/'.$product->image) }}" alt="Products" class="product-item">
-                                                <button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to Cart</button>
+												<a href="{{ route('product.details', $product->id) }}">
+													<img src="{{ asset('/storage/images/'.$product->image) }}" alt="{{ $product->name }}" class="product-item">
+												</a>
+
+
+												<button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to Cart</button>
                                             </figure>
                                             <figcaption>
-                                                <h3>{{ $product->title }}</h3>
+												<a href="{{ route('product.details', $product->id) }}">
+													<h3>{{ $product->title }}</h3>
+												</a>
                                                 <span>{{ $product->description }}</span>
                                                 <div class="item-price">{{ "Rp " . number_format($product->price,2,',','.') }}</div>
                                             </figcaption>

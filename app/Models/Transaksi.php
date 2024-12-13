@@ -52,5 +52,15 @@ class Transaksi extends Model
 {
     return $this->belongsTo(User::class, 'id_user');
 }
-    
+
+    public function details()
+    {
+        return $this->hasMany(DetailTransaksi::class, 'id_transaksi');
+    }
+
+    public function ulasan()
+    {
+        return $this->hasOne(Ulasan::class, 'id_transaksi');
+    }
+
 }

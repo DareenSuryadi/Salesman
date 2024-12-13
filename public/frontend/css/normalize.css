@@ -349,3 +349,20 @@ template {
 [hidden] {
   display: none;
 }
+
+
+#title-0, #price-0 {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+#stock-0 {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+#ulasan-0 {
+  margin-bottom: 0;
+  padding-bottom: 0;
+
+}

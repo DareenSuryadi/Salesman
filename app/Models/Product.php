@@ -43,6 +43,21 @@ class Product extends Model
         return $this->hasMany(Transaksi::class, 'id_product');
     }
     
+    public function ulasans()
+    {
+        return $this->hasManyThrough(
+            Ulasan::class,          // Target model (ulasan)
+            DetailTransaksi::class, // Intermediate model (detail_transaksi)
+            'id_product',           // Foreign key di detail_transaksi
+            'id_transaksi',         // Foreign key di ulasan
+            'id',                   // Primary key di products
+            'id_transaksi'          // Primary key di detail_transaksi
+        );
+    }
     
+    public function detailTransaksis()
+    {
+        return $this->hasMany(DetailTransaksi::class, 'id_product');
+    }
 
-    }               
+}               

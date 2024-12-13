@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UlasanController;
 
 
 Route::get('/', function () {
@@ -26,3 +28,6 @@ Route::post('/login', [\App\Http\Controllers\LoginController::class, 'login']);
 Route::post('/logout', [\App\Http\Controllers\LoginController::class, 'logout'])->name('logout');
 Route::get('/send-email/{to}/{Id}', [\App\Http\Controllers\TransaksiController::class,'sendemail']);
 Route::get('/dashboard', [TransaksiController::class, 'dashboard'])->name('dashboard.customer')->middleware('auth');
+
+Route::get('/products/{id}/details', [ProductController::class, 'showc'])->name('product.details');
+Route::post('/transaksi/{id_transaksi}/ulasan', [UlasanController::class, 'store'])->middleware('auth');
