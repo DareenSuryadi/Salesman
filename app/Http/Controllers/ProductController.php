@@ -132,6 +132,17 @@ class ProductController extends Controller
 
          public function showc(string $id): View
          {
+            $cart = session()->get('cart', []);
+            $totalPrice = 0;
+    
+            // Calculate total price
+            foreach ($cart as $item) {
+                $totalPrice += $item['price'] * $item['jumlah_pembelian'];
+            }
+    
+            $product = new Product;
+            $products = $product->get_product()->latest()->paginate(10);
+            
             $product = Product::findOrFail($id);
             
             $averageRating = $product->ulasans->avg('rating');
@@ -144,7 +155,7 @@ class ProductController extends Controller
                 ->select('ulasan.*', 'transaksis.id as transaksi_id')
                 ->get();
 
-            return view('products.showc', compact('product', 'ulasan', 'averageRating')); 
+            return view('products.showc', compact('product', 'ulasan', 'averageRating', 'cart', 'totalPrice')); 
          } 
 
 

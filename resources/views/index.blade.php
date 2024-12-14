@@ -42,6 +42,9 @@
 								<ul class="menu-list">
 									<li class="menu-item active"><a href="{{ route('index') }}">Home</a></li>
 									<li class="menu-item"><a href="{{ route('plist') }}" class="nav-link">Products</a></li>
+									<li class="menu-item"><a href="{{ route('cart') }}" class="cart for-buy">
+										<span>Cart:({{ "Rp " . number_format($totalPrice, 0, ',', '.') }})</span>
+									</a></li>
 									@guest
 										@if (Route::has('login'))
 											<li class="menu-item">
@@ -76,7 +79,6 @@
 											</ul>
 										</li>
 									@endguest
-									<!-- <li class="menu-item"><a href="#" class="cart for-buy"><i class="icon icon-clipboard"></i><span>Cart:(0$)</span></a></li> -->
 									<li class="menu-item">
                                         <div class="action-menu">
                                             <div class="search-bar">
@@ -166,11 +168,12 @@
 							<div class="col-md-3">
 								<div class="product-item">
 									<figure class="product-style">
-									<a href="{{ route('product.details', $product->id) }}">
-										<img src="{{ asset('/storage/images/'.$product->image) }}" alt="Books" class="product-item">
-									</a>
-										<button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
-											Cart</button>
+										<a href="{{ route('product.details', $product->id) }}">
+											<img src="{{ asset('/storage/images/'.$product->image) }}" alt="Books" class="product-item">
+										</a>
+										<a href="{{ route('cart.add', $product->id) }}" style="text-decoration: none; color: white;">
+											<button type="button" class="add-to-cart">Add to Cart</button>
+										</a>
 									</figure>
 									<figcaption>
 									<a href="{{ route('product.details', $product->id) }}">
@@ -258,11 +261,12 @@
 							@foreach ($products->take(4) as $product)
 							<div class="product-item">
 								<figure class="product-style">
-								<a href="{{ route('product.details', $product->id) }}">
-									<img src="{{ asset('/storage/images/'.$product->image) }}" alt="Books" class="product-item">
-								</a>
-									<button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
-										Cart</button>
+									<a href="{{ route('product.details', $product->id) }}">
+										<img src="{{ asset('/storage/images/'.$product->image) }}" alt="Books" class="product-item">
+									</a>
+									<a href="{{ route('cart.add', $product->id) }}" style="text-decoration: none; color: white;">
+										<button type="button" class="add-to-cart">Add to Cart</button>
+									</a>
 								</figure>
 								<figcaption>
 								<a href="{{ route('product.details', $product->id) }}">

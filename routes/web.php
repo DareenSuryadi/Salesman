@@ -19,6 +19,10 @@ Route::get('/plist', [App\Http\Controllers\LoginController::class, 'plist'])->na
 Route::get('/home', [App\Http\Controllers\LoginController::class, 'home'])->name('home')->middleware('auth');
 Route::get('/profile', [App\Http\Controllers\LoginController::class, 'profile'])->name('profile')->middleware('auth');
 Route::get('/indexc', [App\Http\Controllers\ProductController::class, 'indexc'])->name('indexc')->middleware('auth');
+Route::get('/cart', [App\Http\Controllers\LoginController::class, 'viewCart'])->name('cart');
+Route::get('/cart/add/{id}', [App\Http\Controllers\LoginController::class, 'addToCart'])->name('cart.add');
+Route::get('/cart/remove/{id}', [App\Http\Controllers\LoginController::class, 'removeFromCart'])->name('cart.remove');
+Route::post('cart/update/{id}', [App\Http\Controllers\LoginController::class, 'updateQuantity'])->name('cart.update');
 Route::resource('/users', \App\Http\Controllers\UserController::class)->middleware('auth');
 Route::resource('/category', \App\Http\Controllers\CategoryController::class)->middleware('auth');
 Route::get('/register', [\App\Http\Controllers\RegisterController::class, 'registerForm'])->name('register');

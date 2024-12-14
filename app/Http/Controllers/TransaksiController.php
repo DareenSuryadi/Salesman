@@ -49,7 +49,7 @@ class TransaksiController extends Controller
             'products' => 'required|array',
             'products.*.id_product' => 'required|exists:products,id',
             'products.*.jumlah_pembelian' => 'required|integer|min:1',
-            'tanggal_transaksi' => 'required|date',
+            'tanggal_transaksi' => 'nullable|date',
             'diskon' => 'nullable|numeric|min:0|max:100',
             'status' => 'nullable|in:Proses,Unpaid,Done',
         ]);
@@ -73,7 +73,6 @@ class TransaksiController extends Controller
 
         // Buat transaksi baru
         $newTransaksi = Transaksi::create([
-            'tanggal_transaksi' => $request->tanggal_transaksi,
             'diskon' => $diskon,
             'status' => 'Proses',
             'total_harga' => $totalSetelahDiskon,
@@ -88,6 +87,8 @@ class TransaksiController extends Controller
                 'jumlah_pembelian' => $productData['jumlah_pembelian'],
             ]);
         }
+        
+        session()->forget('cart');
 
         return redirect()->route('transaksis.index')->with('success', 'Transaksi berhasil ditambahkan!');
     }

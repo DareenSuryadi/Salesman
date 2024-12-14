@@ -31,24 +31,24 @@ return new class extends Migration
         
         Schema::create('suppliers', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_kota_supp');
+            $table->string('supplier_name');
             $table->string('nama_negara_supp');
             $table->string('nama_provinsi_supp');
-            $table->int('kode_pos');
-            $table->string('supplier_name');
-            $table->string('nama_negara', 50);
-            $table->string('nama_kota', 100);
-            $table->text('alamat');
-            $table->bigInteger('no_telp');
+            $table->string('nama_kota_supp');
+            $table->integer('kode_pos');
+            $table->string('phone_supp', 20);
+            $table->string('pic_name');
+            $table->string('phone_pic', 20);
             $table->timestamps();
         });
         
         Schema::create('transaksis', function (Blueprint $table) {
             $table->id();
             $table->foreignId('id_user')->nullable()->index();
-            $table->timestamp('tanggal_transaksi');
+            $table->timestamp('tanggal_transaksi')->useCurrent();;
             $table->integer('diskon')->default(0);
-            $table->enum('status', ['Unpaid', 'Process', 'Done'])->default('Unpaid');
+            $table->enum('status', ['Unpaid', 'Proses', 'Done'])->default('Unpaid');
+            $table->string('bukti_transaksi')->nullable();
             $table->timestamps();
         });
         

@@ -42,6 +42,9 @@
 								<ul class="menu-list">
 									<li class="menu-item"><a href="{{ route('index') }}">Home</a></li>
 									<li class="menu-item active"><a href="{{ route('plist') }}" class="nav-link">Products</a></li>
+									<li class="menu-item"><a href="{{ route('cart') }}" class="cart for-buy">
+										<span>Cart:({{ "Rp " . number_format($totalPrice, 2, ',', '.') }})</span>
+									</a></li>
 									@guest
 										@if (Route::has('login'))
 											<li class="menu-item">
@@ -76,7 +79,6 @@
 											</ul>
 										</li>
 									@endguest
-									<!-- <li class="menu-item"><a href="#" class="cart for-buy"><i class="icon icon-clipboard"></i><span>Cart:(0$)</span></a></li> -->
 									<li class="menu-item">
                                         <div class="action-menu">
                                             <div class="search-bar">
@@ -126,8 +128,9 @@
 					<p id="stock-0">Stock: {{ $product->stock }}</p>
 					<p id="price-0">Harga: {{ "Rp " . number_format($product->price, 2, ',', '.') }}</p>
 					<p>{{ $product->description }}</p>
-					<button type="button" class="add-to-cart" data-product-tile="add-to-cart">Add to
-											Cart</button>
+					<a href="{{ route('cart.add', $product->id) }}" style="text-decoration: none; color: white;">
+						<button type="button" class="add-to-cart">Add to Cart</button>
+					</a>
 				</div>
 			</div>
 			<div class="row">
