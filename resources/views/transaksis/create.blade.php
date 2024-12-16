@@ -131,23 +131,10 @@
             <!-- Tombol untuk menambah produk -->
             <button type="button" class="btn btn-success mb-3" onclick="addProduct()">Tambah Produk</button>
 
-        
-            <div class="form-group">
-                <label for="tanggal_transaksi">Tanggal Transaksi</label>
-                <input type="date" class="form-control form-control-user @error('tanggal_transaksi') is-invalid @enderror" id="tanggal_transaksi"
-                placeholder="Masukkan tanggal transaksi" name="tanggal_transaksi" required autocomplete="tanggal_transaksi">
-
-                @error('tanggal_transaksi')
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                @enderror
-            </div>
-
             <div class="form-group">
                 <label for="diskon">Input Your Diskon Periode 20% Now!!</label>
                 <input type="number" class="form-control form-control-user @error('diskon') is-invalid @enderror" id="diskon"
-                placeholder="Masukkan diskon" name="diskon" required autocomplete="diskon" min ="20"max="20" step="0.01">
+                placeholder="Masukkan diskon" name="diskon" required autocomplete="diskon" min ="20"max="20" step="0.01" value="20" disabled>
 
                 @error('diskon')
                     <span class="invalid-feedback" role="alert">
