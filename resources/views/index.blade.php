@@ -132,7 +132,7 @@
 								</div>
 							</div>
 							<a href="{{ route('product.details', $product->id) }}">
-							<img src="{{ asset('/storage/images/'.$product->image) }}" alt="banner" style="width:40%" class="">
+							<img src="{{ asset('/storage/images/'.$product->image) }}" alt="banner" style="width:70%" class="">
 							</a>
 						</div>
 						@endforeach

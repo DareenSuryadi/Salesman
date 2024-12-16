@@ -144,9 +144,13 @@
 												<a href="{{ route('product.details', $product->id) }}">
 													<h3>{{ $product->title }}</h3>
 												</a>
-                                                <span>{{ $product->description }}</span>
-                                                <div class="item-price">{{ "Rp " . number_format($product->price,2,',','.') }}</div>
-                                            </figcaption>
+												<button class="toggle-description" onclick="toggleDescription(this)" style="background: #FFDAB9; color: brown; border-radius:10px;">Tampilkan Deskripsi</button>
+												<div class="description-container" style="display: none;">
+													<span>{{ $product->description }}</span>
+												</div>
+												<div class="item-price">{{ "Rp " . number_format($product->price,2,',','.') }}</div>
+											</figcaption>
+
                                         </div>
                                     </div>
                                 @endforeach
@@ -333,6 +337,18 @@
 		crossorigin="anonymous"></script>
 	<script src="{{asset('frontend/js/plugins.js')}}"></script>
 	<script src="{{asset('frontend/js/script.js')}}"></script>
+	<script>
+    function toggleDescription(button) {
+        const descriptionContainer = button.nextElementSibling;
+        if (descriptionContainer.style.display === "none") {
+            descriptionContainer.style.display = "block";
+            button.textContent = "Sembunyikan Deskripsi";
+        } else {
+            descriptionContainer.style.display = "none";
+            button.textContent = "Tampilkan Deskripsi";
+        }
+    }
+</script>
 
 </body>
 
