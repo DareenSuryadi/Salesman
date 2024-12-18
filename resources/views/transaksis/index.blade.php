@@ -135,7 +135,7 @@
         <h6 class="m-0 font-weight-bold text-primary">DataTables Transaksi
         <span class="float-right">
             <a href="{{ route('transaksis.create') }}">
-                <button class="btn btn-outline-secondary">Add Transaksi</button>
+                <!-- <button class="btn btn-outline-secondary">Add Transaksi</button> -->
             </a>
         </span>
         </h6>

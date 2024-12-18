@@ -81,6 +81,14 @@
             </div>
 
             <div class="form-group">
+                <label for="bukti_transaksi">Bukti Pembayaran</label>
+                <input type="file" name="bukti_transaksi" class="form-control" accept="image/*">
+                @if($transaksi->bukti_transaksi)
+                    <img src="{{ Storage::url($transaksi->bukti_transaksi) }}" alt="Bukti Transaksi" style="max-width: 200px; margin-top: 10px;">
+                @endif
+            </div>
+
+            <div class="form-group">
                 <button class="btn btn-outline-primary">Update</button>
                 <button type="button" id="resetBtn" onclick="resetForm()" class="btn btn-md btn-warning">RESET</button>
             </div>

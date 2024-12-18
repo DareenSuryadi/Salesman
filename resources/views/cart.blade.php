@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-	<title>Apa aja</title>
+	<title>Our Cart</title>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -193,7 +193,7 @@
 
 					<div class="footer-item">
 						<div class="company-brand">
-							<img src="{{asset('frontend/images/main-logo.png')}}" alt="logo" class="footer-logo">
+						<p style="font-size:24px;"><b>K-llection</b></p>
 							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sagittis sed ptibus liberolectus
 								nonet psryroin. Amet sed lorem posuere sit iaculis amet, ac urna. Adipiscing fames
 								semper erat ac in suspendisse iaculis.</p>

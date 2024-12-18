@@ -32,7 +32,8 @@
         </tbody>
     </table>
     <br>
+    <center>
     <img src="https://www.shutterstock.com/image-vector/3d-editable-text-effect-kpop-260nw-2254665185.jpg">
-
+    </center>
 </body>
 </html>

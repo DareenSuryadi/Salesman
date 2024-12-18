@@ -174,10 +174,15 @@
 													</a>
                                                 </figure>
                                                 <figcaption>
-                                                    <h3>{{ $product->title }}</h3>
-                                                    <span>{{ $product->description }}</span>
-                                                    <div class="item-price">{{ "Rp " . number_format($product->price,2,',','.') }}</div>
-                                                </figcaption>
+												<a href="{{ route('product.details', $product->id) }}">
+													<h3>{{ $product->title }}</h3>
+												</a>
+												<button class="toggle-description" onclick="toggleDescription(this)" style="background: #FFDAB9; color: brown; border-radius:10px;">Tampilkan Deskripsi</button>
+												<div class="description-container" style="display: none;">
+													<span>{{ $product->description }}</span>
+												</div>
+												<div class="item-price">{{ "Rp " . number_format($product->price,2,',','.') }}</div>
+											</figcaption>
                                             </div>
                                         </div>
                                     @endforeach
@@ -199,6 +204,7 @@
 
 					<div class="footer-item">
 						<div class="company-brand">
+						<p style="font-size:24px;"><b>K-llection</b></p>
 							<!-- <img src="{{asset('frontend/images/main-logo.png')}}" alt="logo" class="footer-logo"> -->
 							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sagittis sed ptibus liberolectus
 								nonet psryroin. Amet sed lorem posuere sit iaculis amet, ac urna. Adipiscing fames

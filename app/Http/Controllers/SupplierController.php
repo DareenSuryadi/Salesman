@@ -63,6 +63,15 @@ class SupplierController extends Controller
         return redirect()->route('suppliers.index')->with('success', 'Data berhasil diperbarui!');
     }
 
+    public function show($id)
+    {
+        // Code to show a supplier's details by ID
+        // Example:
+        $supplier = Supplier::findOrFail($id);
+        return view('suppliers.show', compact('supplier'));
+    }
+
+
     public function destroy($id): RedirectResponse
     {
         $supplier = Supplier::findOrFail($id);
