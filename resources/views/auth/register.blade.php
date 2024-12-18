@@ -39,6 +39,44 @@
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="text" class="form-control form-control-user @error('alamat') is-invalid @enderror"
+                                            id="alamat" placeholder="Your Address" name="alamat" required autocomplete="new-password">
+                                            @error('alamat')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control form-control-user @error('nama_provinsi') is-invalid @enderror"
+                                            id="nama_provinsi" placeholder="Your Province" name="nama_provinsi" required autocomplete="new-password">
+                                            @error('nama_provinsi')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror</div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="text" class="form-control form-control-user @error('nama_kota') is-invalid @enderror"
+                                            id="password" placeholder="Your City" name="nama_kota" required autocomplete="new-password">
+                                            @error('nama_kota')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="number" class="form-control form-control-user @error('kode_pos') is-invalid @enderror"
+                                            id="kode_pos" placeholder="Your Pascal Code" name="kode_pos" required autocomplete="new-password" >
+                                            @error('kode_pos')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                            @enderror</div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
                                         <input type="password" class="form-control form-control-user @error('password') is-invalid @enderror"
                                             id="password" placeholder="Password" name="password" required autocomplete="new-password">
                                             @error('password')

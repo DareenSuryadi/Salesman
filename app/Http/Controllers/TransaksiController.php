@@ -36,25 +36,26 @@ class TransaksiController extends Controller
         return view('transaksis.index', compact('transaksis'));
     }
     
-    public function indexUlasan()
-    {
-        if (Auth::user()->role == 'admin') {
-            // Ambil semua transaksi jika pengguna adalah admin
-            $transaksis = Transaksi::all();
-        } else {
-            // Ambil transaksi berdasarkan ID pengguna jika pengguna adalah customer
-            $transaksis = Transaksi::where('status', 'Done')->with('details')->get();
     
-        }
-        // Ambil detail transaksi untuk setiap transaksi
-        foreach ($transaksis as $transaksi) {
-            $transaksi->details = DB::table('detail_transaksi')
-                ->where('id_transaksi', $transaksi->id)
-                ->join('products', 'products.id', '=', 'detail_transaksi.id_product')
-                ->select('detail_transaksi.jumlah_pembelian', 'products.title', 'products.price')
+        public function indexUlasan()
+        {
+            if (Auth::user()->role == 'admin') {
+                $transaksis = Transaksi::all();
+            } else {
+                $transaksis = Transaksi::where('id_user', Auth::id())  // Filter berdasarkan ID pengguna
+                ->where('status', 'Done')       // Status transaksi yang 'Done'
+                ->with('details')               // Load relasi 'details'
                 ->get();
-        }
-
+            }
+            // Ambil detail transaksi untuk setiap transaksi
+            foreach ($transaksis as $transaksi) {
+                $transaksi->details = DB::table('detail_transaksi')
+                    ->where('id_transaksi', $transaksi->id)
+                    ->join('products', 'products.id', '=', 'detail_transaksi.id_product')
+                    ->select('detail_transaksi.jumlah_pembelian', 'products.title', 'products.price')
+                    ->get();
+            }
+    
         return view('ulasan.index', compact('transaksis'));
     }
 
@@ -73,7 +74,7 @@ class TransaksiController extends Controller
             'products.*.jumlah_pembelian' => 'required|integer|min:1',
             'tanggal_transaksi' => 'nullable|date',
             'diskon' => 'nullable|numeric|min:0|max:100',
-            'status' => 'nullable|in:Proses,Unpaid,Done',
+            'status' => 'nullable|in:Proses,Done',
         ]);
         
         // Hitung total harga berdasarkan setiap produk yang dipilih
@@ -159,7 +160,7 @@ class TransaksiController extends Controller
             'products.*.jumlah_pembelian' => 'required|integer|min:1',
             'tanggal_transaksi' => 'required|date',
             'diskon' => 'nullable|numeric|between:0,100',
-            'status' => 'nullable|in:Proses,Unpaid,Done',
+            'status' => 'nullable|in:Proses,Done',
             'bukti_transaksi' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
         ]);
 

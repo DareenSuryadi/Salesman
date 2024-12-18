@@ -150,6 +150,7 @@
                         <th scope="col">Tanggal Transaksi</th>
                         <th scope="col">Diskon</th>
                         <th scope="col">Total Harga</th>
+                        <th scope="col"> Status</th>
                         <th scope="col" style="width: 20%">Action</th>
                     </tr>
                 </thead>
@@ -174,6 +175,7 @@
                                     <td rowspan="{{ count($transaksi->details) }}">{{ $transaksi->tanggal_transaksi }}</td>
                                     <td rowspan="{{ count($transaksi->details) }}">{{ $transaksi->diskon }}%</td>
                                     <td rowspan="{{ count($transaksi->details) }}"class="text-center">{{ number_format($totalHargaTransaksi, 2) }}</td>
+                                    <td rowspan="{{ count($transaksi->details) }}">{{ $transaksi->status }}</td>
                                     <td rowspan="{{ count($transaksi->details) }}" class="text-center">
                                         <a href="{{ route('transaksis.show', [$transaksi->id]) }}">
                                             <button class="btn btn-primary">

@@ -47,10 +47,6 @@ class UserController extends Controller
         return redirect()->back()->with('message', 'User berhasil ditambahkan');
     }
 
-    public function show($id)
-    {
-        //
-    }
 
     public function edit($id)
     {

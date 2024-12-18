@@ -42,3 +42,5 @@ Route::post('/ulasan/{id}', [UlasanController::class, 'store'])->name('ulasan.st
 Route::get('/ulasan', [TransaksiController::class, 'indexUlasan'])->name('ulasan.index');
 Route::get('/ulasan/{id_transaksi}/show', [UlasanController::class, 'show'])->name('ulasan.show');
 Route::get('/ulasan/{id}/show', [UlasanController::class, 'show']);
+
+

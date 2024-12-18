@@ -164,6 +164,7 @@
 
 					<div class="footer-item">
 						<div class="company-brand">
+						<p style="font-size:24px;"><b>K-llection</b></p>
 							<!-- <img src="{{asset('frontend/images/main-logo.png')}}" alt="logo" class="footer-logo"> -->
 							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sagittis sed ptibus liberolectus
 								nonet psryroin. Amet sed lorem posuere sit iaculis amet, ac urna. Adipiscing fames

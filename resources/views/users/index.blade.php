@@ -29,6 +29,11 @@
                     <th scope="col">No</th>
                     <th scope="col">Nama</th>
                     <th scope="col">Email</th>
+                    <th scope="col">Handphone</th>
+                    <th scope="col">Addres</th>
+                    <th scope="col">Provinsi</th>
+                    <th scope="col">Kota</th>
+                    <th scope="col">Kode Pos</th>
                     <th scope="col">Role</th>
                     <th scope="col">Action</th>
                 </tr>
@@ -40,6 +45,12 @@
                         <th scope="row">{{$key+1}}</th>
                         <td>{{$user->name}}</td>
                         <td>{{$user->email}}</td>
+                        <td>{{$user->no_telp}}</td>
+                        <td>{{$user->alamat}}</td>
+                        <td>{{$user->nama_provinsi}}</td>
+                        <td>{{$user->nama_kota}}</td>
+                        <td>{{$user->kode_pos}}</td>
+
                         <td>{{$user->role}}</td>
                         <td>
                             <a href="{{route('users.edit', [$user->id])}}">
