@@ -134,8 +134,8 @@
     <div class="card-header py-3">
         <h6 class="m-0 font-weight-bold text-primary">DataTables Transaksi
         <span class="float-right">
-            <a href="{{ route('transaksis.create') }}">
-                <!-- <button class="btn btn-outline-secondary">Add Transaksi</button> -->
+            <a href="{{ route('ulasan.index') }}">
+                <button class="btn btn-outline-secondary">Ulasan</button>
             </a>
         </span>
         </h6>

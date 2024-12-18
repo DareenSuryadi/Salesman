@@ -63,4 +63,8 @@ class Transaksi extends Model
         return $this->hasOne(Ulasan::class, 'id_transaksi');
     }
 
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'detail_transaksi', 'id_transaksi', 'id_product');
+    }
 }
