@@ -34,4 +34,11 @@ Route::get('/send-email/{to}/{Id}', [\App\Http\Controllers\TransaksiController::
 Route::get('/dashboard', [TransaksiController::class, 'dashboard'])->name('dashboard.customer')->middleware('auth');
 
 Route::get('/products/{id}/details', [ProductController::class, 'showc'])->name('product.details');
-Route::post('/transaksi/{id_transaksi}/ulasan', [UlasanController::class, 'store'])->middleware('auth');
+Route::get('/ulasan/{id_transaksi}/create', [UlasanController::class, 'create'])->name('ulasan.create');
+Route::post('/ulasan/{id_transaksi}', [UlasanController::class, 'store'])->name('ulasan.store');
+
+Route::get('/ulasan/{id}', [UlasanController::class, 'create'])->name('ulasan.create');
+Route::post('/ulasan/{id}', [UlasanController::class, 'store'])->name('ulasan.store');
+Route::get('/ulasan', [TransaksiController::class, 'indexUlasan'])->name('ulasan.index');
+Route::get('/ulasan/{id_transaksi}/show', [UlasanController::class, 'show'])->name('ulasan.show');
+

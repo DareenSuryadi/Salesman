@@ -35,6 +35,28 @@ class TransaksiController extends Controller
 
         return view('transaksis.index', compact('transaksis'));
     }
+    
+    public function indexUlasan()
+    {
+        if (Auth::user()->role == 'admin') {
+            // Ambil semua transaksi jika pengguna adalah admin
+            $transaksis = Transaksi::all();
+        } else {
+            // Ambil transaksi berdasarkan ID pengguna jika pengguna adalah customer
+            $transaksis = Transaksi::where('status', 'Done')->with('details')->get();
+    
+        }
+        // Ambil detail transaksi untuk setiap transaksi
+        foreach ($transaksis as $transaksi) {
+            $transaksi->details = DB::table('detail_transaksi')
+                ->where('id_transaksi', $transaksi->id)
+                ->join('products', 'products.id', '=', 'detail_transaksi.id_product')
+                ->select('detail_transaksi.jumlah_pembelian', 'products.title', 'products.price')
+                ->get();
+        }
+
+        return view('ulasan.index', compact('transaksis'));
+    }
 
     public function create()
     {
