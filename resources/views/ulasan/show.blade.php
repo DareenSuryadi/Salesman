@@ -109,49 +109,62 @@
 	</div>
 
 	<section class="product-details">
-		<div class="container">
-			<div class="row">
-				<!-- <div class="col-md-6">
-					Gambar produk
-					<img src="{{ asset('/storage/images/'.$product->image) }}" alt="{{ $product->title }}" class="img-fluid">
-				</div> -->
-				<div class="col-md-12">
-					<!-- Detail produk -->
-                    <h3>Ulasan Saya</h3>
-					<h2 id="title-0">{{ $product->title }}</h2>
-					<div class="rating">
-                        @include('components.rating', ['rating' => $ulasan->rating])
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h3>Ulasan Saya</h3>
+                <section id="transaction-details" class="py-1 my-2">
+                    <div class="container">
+                        <h2 class="mb-4">Transaction #{{ $transaksi->id }}</h2>
+
+                        <!-- Product List -->
+                        <div class="col-md-12">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Quantity</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($products as $product)
+                                        <tr>
+                                            <td>{{ $product['name'] }}</td> <!-- Tampilkan nama produk -->
+                                            <td>{{ $product['quantity'] }}</td> <!-- Tampilkan jumlah pembelian produk -->
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Rating dan Tanggal Ulasan -->
+                        @if ($ulasan)
+                            <div class="review">
+								<div class="rating">
+										@include('components.rating', ['rating' => $ulasan->rating]) <!-- Menampilkan rating -->
+									</div>
+
+									<p id="ulasan-0">
+										@if ($ulasan->created_at)
+											{{ $ulasan->created_at->format('d M Y') }} <!-- Menampilkan tanggal ulasan -->
+										@else
+											Tanggal tidak tersedia
+										@endif
+									</p>
+
+									<p>{{ $ulasan->ulasan }}</p>  <!-- Menampilkan ulasan -->
+								</div>
+                        @else
+                            <p>Belum ada ulasan untuk produk ini.</p>
+                        @endif
                     </div>
-                    <p id="ulasan-0">
-						@if ($ulasan->created_at)
-							{{ $ulasan->created_at->format('d M Y') }}
-						@else
-							Tanggal tidak tersedia
-						@endif
-					</p>
-                    <p>{{ $ulasan->ulasan }}</p>
-				</div>
-			</div>
-			<div class="row">
-    <div class="col-md-12">
-        @forelse ($product->ulasans as $ulasan)
-            <div class="review">
-                <!-- Tampilkan nama pengguna atau fallback ke "Anonymous" -->
-                
-                <!-- Tampilkan rating -->
-                
-				<!-- Tampilkan isi ulasan -->
-                
+                </section>
             </div>
-        @empty
-            <p>Belum ada ulasan untuk produk ini.</p>
-        @endforelse
+        </div>
     </div>
-</div>
+</section>
 
-		</div>
-	</section>
-
+	
 	<footer id="footer">
 		<div class="container">
 			<div class="row">
@@ -160,6 +173,7 @@
 
 					<div class="footer-item">
 						<div class="company-brand">
+						<p style="font-size:24px;"><b>K-llection</b></p>
 							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sagittis sed ptibus liberolectus
 								nonet psryroin. Amet sed lorem posuere sit iaculis amet, ac urna. Adipiscing fames
 								semper erat ac in suspendisse iaculis.</p>
