@@ -6,6 +6,8 @@ use App\Models\Transaksi;
 use App\Models\Ulasan;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class UlasanController extends Controller
 {
@@ -61,29 +63,27 @@ class UlasanController extends Controller
         ]);
     
         // Redirect atau respon sukses
-        return redirect()->back()->with('success', 'Review submitted successfully!');
+        return redirect()->route('ulasan.index')->with('success', 'Review submitted successfully!');
     }
-        
-    public function show($id)
+
+    public function show($id_transaksi)
     {
-        // Ambil produk berdasarkan ID produk
-        $product = Product::findOrFail($id);
-
-        // Mendapatkan ID transaksi dari URL atau request
-        $transaksiId = $id; // Atau Anda bisa mendapatkan ID transaksi dari parameter lain yang sesuai
-
-        // Ambil ulasan berdasarkan ID transaksi dan produk
-        $ulasan = Ulasan::join('detail_transaksi', 'detail_transaksi.id_transaksi', '=', 'ulasan.id_transaksi')
-                        ->where('detail_transaksi.id_product', $product->id)  // Pastikan ini mengarah ke ID produk yang benar
-                        ->where('ulasan.id_transaksi', $transaksiId)  // Gunakan $transaksiId yang didefinisikan
-                        ->first();
-
-        // Jika ulasan tidak ditemukan, tampilkan pesan error
-        if (!$ulasan) {
-            return response()->json(['message' => 'Ulasan tidak ditemukan untuk transaksi ini'], 404);
-        }
-
-        // Kirimkan data produk dan ulasan ke view
-        return view('ulasan.show', compact('ulasan', 'product'));
-    }
+        // Ambil transaksi berdasarkan ID transaksi
+        $transaksi = Transaksi::findOrFail($id_transaksi);
+    
+        $details = $transaksi->details; // Relasi yang menghubungkan transaksi dengan detail_transaksi
+        // Ambil produk terkait dengan transaksi dan memuat relasi 'ulasans'
+        $products = $details->map(function ($detail) {
+            return [
+                'name' => $detail->product->title, // Pastikan relasi antara DetailTransaksi dan Product benar
+                'quantity' => $detail->jumlah_pembelian
+            ];
+        });    
+        // Ambil ulasan terkait transaksi (hanya satu ulasan per transaksi)
+        $ulasan = Ulasan::where('id_transaksi', $id_transaksi)->first();  // Ambil satu ulasan berdasarkan ID transaksi
+    
+        // Kirimkan data ke view
+        return view('ulasan.show', compact('products', 'transaksi', 'ulasan'));
+    }  
+    
 }

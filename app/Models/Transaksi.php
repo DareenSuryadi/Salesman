@@ -67,4 +67,10 @@ class Transaksi extends Model
     {
         return $this->belongsToMany(Product::class, 'detail_transaksi', 'id_transaksi', 'id_product');
     }
+
+    public function ulasans()
+    {
+        return $this->hasManyThrough(Ulasan::class, DetailTransaksi::class, 'id_transaksi', 'id_product');
+    }
+
 }
