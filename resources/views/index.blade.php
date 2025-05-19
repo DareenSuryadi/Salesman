@@ -31,7 +31,7 @@
 
 					<div class="col-md-2">
 						<div class="main-logo">
-							<a href="{{ route('home') }}" style="font-size: 24px; font-weight: bold; color: #000000;">K-llection</a>
+							<a href="{{ route('home') }}" style="font-size: 24px; font-weight: bold; color: #000000;">Uri jib </a>
 						</div>
 					</div>
 
@@ -149,7 +149,7 @@
 
 	</section>
 
-	<section id="featured-books" class="py-5 my-5">
+	<section id="featured-products" class="py-5 my-5">
 		<div class="container">
 			<div class="row">
 				<div class="col-md-12">

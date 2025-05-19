@@ -112,7 +112,7 @@ class TransaksiController extends Controller
         }
         
         session()->forget('cart');
-
+                        
         return redirect()->route('transaksis.index')->with('success', 'Transaksi berhasil ditambahkan!');
     }
 
@@ -188,7 +188,7 @@ class TransaksiController extends Controller
         }
         }
 
-        // Kirim email jika status transaksi adalah 'Proses' dan pengguna adalah customer
+        // Kirim email jika status transaksi adalah 'Done' dan pengguna adalah customer
     if ($transaksi->status == 'Done' && Auth::user()->role == 'customer') {
         // Ambil email pengguna yang terkait dengan transaksi
         $user = $transaksi->user;
