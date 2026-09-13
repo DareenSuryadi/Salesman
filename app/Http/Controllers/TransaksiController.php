@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Transaksi;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 
@@ -29,7 +31,7 @@ class TransaksiController extends Controller
             $transaksi->details = DB::table('detail_transaksi')
                 ->where('id_transaksi', $transaksi->id)
                 ->join('products', 'products.id', '=', 'detail_transaksi.id_product')
-                ->select('detail_transaksi.jumlah_pembelian', 'products.title', 'products.price')
+                ->select('detail_transaksi.jumlah_pembelian', 'products.title', 'products.price', 'products.diskon')
                 ->get();
         }
 
@@ -52,7 +54,7 @@ class TransaksiController extends Controller
                 $transaksi->details = DB::table('detail_transaksi')
                     ->where('id_transaksi', $transaksi->id)
                     ->join('products', 'products.id', '=', 'detail_transaksi.id_product')
-                    ->select('detail_transaksi.jumlah_pembelian', 'products.title', 'products.price')
+                    ->select('detail_transaksi.jumlah_pembelian', 'products.title', 'products.price', 'products.diskon')
                     ->get();
             }
     
@@ -61,8 +63,14 @@ class TransaksiController extends Controller
 
     public function create()
     {
-        $products = Product::all(); // Ambil semua produk
-        return view('transaksis.create', compact('products'));
+        if (Auth::user()->role !== 'admin') {
+            return redirect()->route('transaksis.index');
+        }
+
+        $products = Product::where('stock', '>', 0)->get();
+        $customers = User::where('role', 'customer')->get();
+
+        return view('transaksis.create', compact('products', 'customers'));
     }
 
     public function store(Request $request)
@@ -72,16 +80,21 @@ class TransaksiController extends Controller
             'products' => 'required|array',
             'products.*.id_product' => 'required|exists:products,id',
             'products.*.jumlah_pembelian' => 'required|integer|min:1',
+            'id_user' => ['nullable', 'exists:users,id'],
             'tanggal_transaksi' => 'nullable|date',
             'diskon' => 'nullable|numeric|min:0|max:100',
-            'status' => 'nullable|in:Proses,Done',
+            'status' => 'nullable|in:Unpaid,Proses,Done',
         ]);
-        
+
+        $targetUserId = Auth::user()->role === 'admin' && $request->filled('id_user')
+            ? $request->id_user
+            : Auth::id();
+
         // Hitung total harga berdasarkan setiap produk yang dipilih
         $totalHarga = 0;
         foreach ($request->products as $productData) {
             $product = Product::find($productData['id_product']);
-            $totalHarga += $product->price * $productData['jumlah_pembelian'];
+            $totalHarga += $product->discounted_price * $productData['jumlah_pembelian'];
             $jumlahPembelian = $productData['jumlah_pembelian'];
             $hargaSatuan = $product->price;
             // Kurangi stok produk sesuai jumlah pembelian
@@ -89,17 +102,16 @@ class TransaksiController extends Controller
             $product->save(); // Simpan perubahan stok
 
         }
-        
-        // Hitung diskon jika ada
-        $diskon = $request->diskon ?? 20;
-        $totalSetelahDiskon = $totalHarga - ($totalHarga * ($diskon / 100));
+
+        $diskon = $request->diskon ?? 0;
+        $totalSetelahDiskon = $totalHarga;
 
         // Buat transaksi baru
         $newTransaksi = Transaksi::create([
             'diskon' => $diskon,
-            'status' => 'Proses',
+            'status' => $request->filled('status') ? $request->status : 'Done',
             'total_harga' => $totalSetelahDiskon,
-            'id_user' => Auth::id(), // Simpan ID pengguna yang sedang login
+            'id_user' => $targetUserId,
         ]);
 
         // Simpan detail transaksi untuk setiap produk
@@ -125,15 +137,19 @@ class TransaksiController extends Controller
         $detailTransaksis = DB::table('detail_transaksi')
             ->where('id_transaksi', $transaksi->id)
             ->join('products', 'products.id', '=', 'detail_transaksi.id_product')
-            ->select('detail_transaksi.jumlah_pembelian', 'products.id as id_product', 'products.title', 'products.price')
+            ->select('detail_transaksi.jumlah_pembelian', 'products.id as id_product', 'products.title', 'products.price', 'products.diskon')
             ->get();
 
         // Render view dengan transaksi dan detail transaksi
         return view('transaksis.show', compact('transaksi', 'detailTransaksis'));
     }
 
-    public function edit(string $id): View
+    public function edit(string $id)
     {
+        if (Auth::user()->role !== 'admin') {
+            return redirect()->route('transaksis.show', $id);
+        }
+
         // Ambil transaksi berdasarkan ID
         $transaksi = Transaksi::findOrFail($id);
 
@@ -141,7 +157,7 @@ class TransaksiController extends Controller
         $detailTransaksis = DB::table('detail_transaksi')
             ->where('id_transaksi', $transaksi->id)
             ->join('products', 'products.id', '=', 'detail_transaksi.id_product')
-            ->select('detail_transaksi.jumlah_pembelian', 'products.id as id_product', 'products.title')
+            ->select('detail_transaksi.jumlah_pembelian', 'products.id as id_product', 'products.title', 'products.price', 'products.diskon')
             ->get();
 
         // Ambil semua produk
@@ -153,6 +169,10 @@ class TransaksiController extends Controller
 
     public function update(Request $request, $id): RedirectResponse
     {
+        if (Auth::user()->role !== 'admin') {
+            return redirect()->route('transaksis.show', $id);
+        }
+
  // Validasi input
         $request->validate([
             // 'products' => 'required|array',
@@ -160,18 +180,24 @@ class TransaksiController extends Controller
             'products.*.jumlah_pembelian' => 'required|integer|min:1',
             'tanggal_transaksi' => 'required|date',
             'diskon' => 'nullable|numeric|between:0,100',
-            'status' => 'nullable|in:Proses,Done',
+            'status' => 'nullable|in:Unpaid,Proses,Done',
             'bukti_transaksi' => 'nullable|image|mimes:jpeg,jpg,png|max:2048',
         ]);
 
         // Ambil transaksi berdasarkan ID
         $transaksi = Transaksi::findOrFail($id);
 
+        // Status hanya bisa diubah oleh admin; customer cukup upload bukti pembayaran
+        $status = $transaksi->status;
+        if (Auth::user()->role === 'admin' && $request->filled('status')) {
+            $status = $request->status;
+        }
+
         // Perbarui transaksi
         $transaksi->update([
             'tanggal_transaksi' => $request->tanggal_transaksi,
-            'diskon' => $request->diskon ?? 20,
-            'status' => 'Done',
+            'diskon' => 0,
+            'status' => $status,
             'bukti_transaksi' => $request->hasFile('bukti_transaksi') ? $request->file('bukti_transaksi')->store('public/images') : $transaksi->bukti_transaksi,
         ]);
         if (Auth::user()->role !== 'customer'){
@@ -188,29 +214,24 @@ class TransaksiController extends Controller
         }
         }
 
-        // Kirim email jika status transaksi adalah 'Done' dan pengguna adalah customer
-    if ($transaksi->status == 'Done' && Auth::user()->role == 'customer') {
-        // Ambil email pengguna yang terkait dengan transaksi
-        $user = $transaksi->user;
-        if ($user) {
-            // Ambil detail transaksi
-            $detailTransaksis = DB::table('detail_transaksi')
-                ->where('id_transaksi', $transaksi->id)
-                ->join('products', 'products.id', '=', 'detail_transaksi.id_product')
-                ->select('detail_transaksi.jumlah_pembelian', 'products.title', 'products.price')
-                ->get();
+        // Kirim email hanya saat transaksi benar-benar di-approve menjadi Done
+        if ($transaksi->status == 'Done' && $transaksi->wasChanged('status')) {
+            $user = $transaksi->user;
+            if ($user) {
+                $detailTransaksis = DB::table('detail_transaksi')
+                    ->where('id_transaksi', $transaksi->id)
+                    ->join('products', 'products.id', '=', 'detail_transaksi.id_product')
+                    ->select('detail_transaksi.jumlah_pembelian', 'products.title', 'products.price', 'products.diskon')
+                    ->get();
 
-            // Kirim email ke pengguna menggunakan template Blade
-            Mail::send('transaksis.email', ['transaksi' => $transaksi, 'detailTransaksis' => $detailTransaksis], function ($message) use ($user) {
-                $message->to($user->email)
-                        ->subject('This is The Receipt From Your Purchases at Our K-llection Store');
-            });
-        } else {
-            // Jika user tidak ditemukan, bisa menambahkan log atau pesan error
-            \Log::error('User tidak ditemukan untuk transaksi ID: ' . $transaksi->id);
+                Mail::send('transaksis.email', ['transaksi' => $transaksi, 'detailTransaksis' => $detailTransaksis], function ($message) use ($user) {
+                    $message->to($user->email)
+                            ->subject('This is The Receipt From Your Purchases at Our Salesman Store');
+                });
+            } else {
+                Log::error('User tidak ditemukan untuk transaksi ID: ' . $transaksi->id);
+            }
         }
-    
-    }
         return redirect()->route('transaksis.index')->with('success', 'Transaksi berhasil diperbarui!');
     }
 

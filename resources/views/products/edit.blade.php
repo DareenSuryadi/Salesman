@@ -86,6 +86,17 @@
             </div>
 
             <div class="form-group">
+                <label for="alamat">Alamat</label>
+                <textarea class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" rows="3" placeholder="Masukkan alamat properti" required>{{ old('alamat', $data['product']->alamat) }}</textarea>
+
+                @error('alamat')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="form-group">
                 <label for="price">Price</label>
                 <input type="number" class="form-control form-control-user @error('price') is-invalid @enderror" id="price"
                 placeholder="Masukkan price" value="{{ old('price', $data['product']->price) }}" name="price" required autocomplete="price">
@@ -96,7 +107,79 @@
                     </span>
                 @enderror
             </div>
+
+            <div class="form-group">
+                <label for="diskon">Diskon (%)</label>
+                <input type="number" class="form-control form-control-user @error('diskon') is-invalid @enderror" id="diskon"
+                placeholder="Masukkan diskon (0-100)" value="{{ old('diskon', $data['product']->diskon ?? 0) }}" name="diskon" required min="0" max="100" step="1">
+
+                @error('diskon')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
             
+<h4>Fasilitas</h4>
+    <div class="row">
+        @for ($i = 0; $i < 5; $i++)
+            <div class="col-md-4 mb-3">
+                @php
+    $fasilitas = $data['product']->fasilitas[$i] ?? null;
+                @endphp
+
+                @if ($fasilitas)
+                    <p>Foto Fasilitas {{ $i + 1 }}</p>
+                    <img src="{{ asset('storage/fasilitas/' . $fasilitas->foto) }}" alt="Fasilitas {{ $i + 1 }}" class="img-fluid mb-2" style="max-height: 150px;">
+                    
+                    <!-- Checkbox untuk menghapus -->
+                    <div class="form-check mb-1">
+                        <input class="form-check-input" type="checkbox" name="delete_fasilitas[]" value="{{ $fasilitas->id }}" id="delete_{{ $i }}">
+                        <label class="form-check-label" for="delete_{{ $i }}">
+                            Hapus foto ini
+                        </label>
+                    </div>
+
+                    <!-- Input untuk mengganti foto -->
+                    <input type="file" name="fasilitas_edit[{{ $fasilitas->id }}]">
+                @else
+                    <!-- Jika slot kosong -->
+                    <p>Tambah Foto Fasilitas {{ $i + 1 }}</p>
+                    <input type="file" name="fasilitas_new[]">
+                @endif
+            </div>
+        @endfor
+    </div>
+    <h4>Video</h4>
+<div class="form-group">
+    <label for="video_link">Video Link (YouTube, Vimeo, atau lainnya)</label>
+    <input type="url" class="form-control @error('video_link') is-invalid @enderror" name="video_link" id="video_link"
+           placeholder="https://www.youtube.com/watch?v=..." value="{{ old('video_link', $data['product']->video_link) }}">
+
+    @error('video_link')
+        <span class="invalid-feedback" role="alert">
+            <strong>{{ $message }}</strong>
+        </span>
+    @enderror
+
+    @if ($data['product']->video_link)
+        <div class="mt-3">
+            <p>Preview Video:</p>
+            <iframe width="320" height="240" src="{{ preg_replace('/watch\?v=/', 'embed/', $data['product']->video_link) }}" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div class="mt-2">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="delete_video" id="delete_video" value="1">
+                <label class="form-check-label" for="delete_video">
+                    Hapus video ini
+                </label>
+            </div>
+        </div>
+    @endif
+</div>
+
+
+
             <div class="form-group">
                 <label for="stock">Stock</label>
                 <input type="number" class="form-control form-control-user @error('stock') is-invalid @enderror" id="stock"
@@ -110,7 +193,7 @@
             </div>
 
             <div class="form-group">
-                <button class="btn btn-outline-primary">Create</button>
+                <button class="btn btn-outline-primary">Update</button>
                 <button type="button" id="resetBtn" onclick="resetForm()" class="btn btn-md btn-warning" style>RESET</button>
             </div>
         </form>

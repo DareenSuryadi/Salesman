@@ -1,7 +1,7 @@
 <html>
 <body style="background-color:#f3f2ec;">
 <br>  
-<center><h1 style="color:black"> K-LLECTION </h1></center>
+<center><h1 style="color:black"> Salesman </h1></center>
 
 <h2 style="color:black; margin-left: 10px; margin-right : 10px;"; >Detail Transaksi : </h2>
 <table border="1" cellspacing="0" cellpadding="5" style="width: 100%; border: 1px solid #ccc; ">
@@ -25,7 +25,7 @@
                 <tr>
                     <td>{{ $detail->title }}</td>
                     <td>{{ $detail->jumlah_pembelian }}</td>
-                    <td>Rp {{ number_format($detail->price * $detail->jumlah_pembelian - $detail->price * $detail->jumlah_pembelian * $transaksi->diskon / 100, 2) }}</td>
+                    <td>Rp {{ number_format($detail->price * $detail->jumlah_pembelian - $detail->price * $detail->jumlah_pembelian * $detail->diskon / 100, 0, ',', '.') }}</td>
                     <td>{{ $transaksi->status }}</td>
                 </tr>
             @endforeach

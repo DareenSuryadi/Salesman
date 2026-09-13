@@ -47,7 +47,7 @@ class LoginController extends Controller
 
     public function index()
     {
-        $cart = session()->get('cart', []);
+        $cart = $this->syncCartPrices();
         $totalPrice = 0;
 
         // Calculate total price
@@ -57,13 +57,22 @@ class LoginController extends Controller
 
         $product = new Product;
         $products = $product->get_product()->latest()->paginate(10);
+        $luxuriousProducts = $product->get_product()
+            ->orderByDesc('products.price')
+            ->take(1)
+            ->get();
+        $offerProducts = $product->get_product()
+            ->where('products.diskon', '>', 0)
+            ->latest('products.updated_at')
+            ->take(4)
+            ->get();
 
-        return view('index', compact('products', 'cart', 'totalPrice'));
+        return view('index', compact('products', 'luxuriousProducts', 'offerProducts', 'cart', 'totalPrice'));
     }
 
     public function plist()
     {
-        $cart = session()->get('cart', []);
+        $cart = $this->syncCartPrices();
         $totalPrice = 0;
 
         // Calculate total price
@@ -103,17 +112,25 @@ class LoginController extends Controller
     {
         $product = Product::findOrFail($id);
 
+        if ((int) $product->stock <= 0) {
+            return redirect()->back()->with('error', 'Stok produk sudah habis.');
+        }
+
         // Get existing cart or initialize empty cart
-        $cart = session()->get('cart', []);
+        $cart = $this->syncCartPrices();
 
         // Check if product exists in the cart
         if (isset($cart[$id])) {
+            if ($cart[$id]['jumlah_pembelian'] >= $product->stock) {
+                return redirect()->back()->with('error', 'Jumlah pembelian sudah mencapai stok yang tersedia.');
+            }
+
             $cart[$id]['jumlah_pembelian']++;
         } else {
             $cart[$id] = [
                 "title" => $product->title,
                 "jumlah_pembelian" => 1,
-                "price" => $product->price - ($product->price * $product->diskon / 100),
+                "price" => $product->discounted_price,
                 "image" => $product->image,
             ];
         }
@@ -127,7 +144,7 @@ class LoginController extends Controller
     // View the cart
     public function viewCart()
     {
-        $cart = session()->get('cart', []);
+        $cart = $this->syncCartPrices();
         $totalPrice = 0;
 
         // Calculate total price
@@ -158,7 +175,19 @@ class LoginController extends Controller
 
         // If the product is in the cart, update quantity
         if (isset($cart[$id])) {
-            $newQuantity = $request->jumlah_pembelian;
+            $product = Product::findOrFail($id);
+            $newQuantity = (int) $request->jumlah_pembelian;
+
+            if ((int) $product->stock <= 0) {
+                return redirect()->route('cart')->with('error', 'Stok produk sudah habis.');
+            }
+
+            if ($newQuantity > $product->stock) {
+                return redirect()->route('cart')->with('error', 'Jumlah pembelian melebihi stok yang tersedia.');
+            }
+
+            $cart[$id]['price'] = $product->discounted_price;
+
             if ($newQuantity > 0) {
                 $cart[$id]['jumlah_pembelian'] = $newQuantity;
             } else {
@@ -170,5 +199,25 @@ class LoginController extends Controller
         }
 
         return redirect()->route('cart')->with('success', 'Cart updated!');
+    }
+
+    private function syncCartPrices(): array
+    {
+        $cart = session()->get('cart', []);
+
+        foreach ($cart as $id => &$item) {
+            $product = Product::find($id);
+
+            if ($product) {
+                $item['price'] = $product->discounted_price;
+                $item['title'] = $product->title;
+                $item['image'] = $product->image;
+            }
+        }
+
+        unset($item);
+        session()->put('cart', $cart);
+
+        return $cart;
     }
 }

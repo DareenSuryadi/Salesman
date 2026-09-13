@@ -21,9 +21,22 @@ class Product extends Model
         'product_category_id',
         'id_supplier',
         'description',
+        'alamat',
         'price',
+        'diskon',
         'stock',
+        'video_link',
     ];
+
+    protected $casts = [
+        'diskon' => 'integer',
+    ];
+
+    public function getDiscountedPriceAttribute(): float
+    {
+        return (float) $this->price * (1 - ((int) $this->diskon / 100));
+    }
+
     public function get_product(){
         // get all products
         $sql = $this->select("products.*", "category_product.product_category_name as product_category_name", "suppliers.supplier_name")
@@ -42,6 +55,36 @@ class Product extends Model
     {
         return $this->hasMany(Transaksi::class, 'id_product');
     }
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class, 'id_supplier');
+    }
+
+    public function fasilitas()
+    {
+    return $this->hasMany(Fasilitas::class);
+    }
+
+    public function getEmbedVideoLinkAttribute()
+{
+    $url = $this->video_link;
+
+    if (strpos($url, 'youtube.com/watch') !== false) {
+        return preg_replace('/watch\?v=/', 'embed/', $url);
+    }
+
+    if (strpos($url, 'youtu.be/') !== false) {
+        return str_replace('youtu.be/', 'www.youtube.com/embed/', $url);
+    }
+
+    if (strpos($url, 'vimeo.com/') !== false) {
+        return preg_replace('/vimeo\.com\/(\d+)/', 'player.vimeo.com/video/$1', $url);
+    }
+
+    return $url;
+}
+
     
     public function ulasans()
     {

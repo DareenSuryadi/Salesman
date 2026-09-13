@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-	<title>K-llection</title>
+	<title>Salesman</title>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -31,7 +31,7 @@
 
 					<div class="col-md-2">
 						<div class="main-logo">
-							<a href="{{ route('home') }}" style="font-size: 24px; font-weight: bold; color: #000000;">K-llection</a>
+							<a href="{{ route('home') }}" style="font-size: 24px; font-weight: bold; color: #000000;">Salesman</a>
 						</div>
 					</div>
 
@@ -41,11 +41,9 @@
 							<div class="main-menu stellarnav">
 								<ul class="menu-list">
 									<li class="menu-item"><a href="{{ route('index') }}">Home</a></li>
-									<li class="menu-item active"><a href="{{ route('plist') }}" class="nav-link">Products</a></li>
-									<li class="menu-item"><a href="{{ route('cart') }}" class="cart for-buy">
-										<span>Cart:({{ "Rp " . number_format($totalPrice, 2, ',', '.') }})</span>
-									</a></li>
-									@guest
+									<li class="menu-item active"><a href="{{ route('plist') }}" class="nav-link">Products</a></li>										@auth
+											<li class="menu-item"><a href="{{ route('transaksis.index') }}" class="nav-link">Transaksi</a></li>
+										@endauth									@guest
 										@if (Route::has('login'))
 											<li class="menu-item">
 												<a class="nav-link user-account for-buy" href="{{ route('login') }}">
@@ -116,24 +114,69 @@
 			<div class="row">
 				<div class="col-md-6">
 					<!-- Gambar produk -->
-					<img src="{{ asset('/storage/images/'.$product->image) }}" alt="{{ $product->title }}" class="img-fluid">
+					<img src="{{ asset('/storage/images/'.$product->image) }}" alt="{{ $product->title }}" class="img-fluid" style="{{ $product->stock <= 0 ? 'filter: brightness(65%);' : '' }}">
 				</div>
 				<div class="col-md-6">
 					<!-- Detail produk -->
 					<h2 id="title-0">{{ $product->title }}</h2>
+					<p><strong>Alamat:</strong> {{ $product->alamat ?: 'Alamat belum tersedia.' }}</p>
+					<p><strong>Phone PIC:</strong> {{ $product->supplier->phone_pic ?? 'Nomor telepon belum tersedia.' }}</p>
 					<div class="rating">
 						<!-- Komponen untuk menampilkan rating rata-rata -->
 						@include('components.rating', ['rating' => $averageRating])
 					</div>
-					<p id="stock-0">Stock: {{ $product->stock }}</p>
-					<p id="price-0">Harga: {{ "Rp " . number_format($product->price, 2, ',', '.') }}</p>
+					@if ($product->stock <= 0)
+						<p id="stock-0" style="color: #dc3545; font-weight: bold;">Sold Out</p>
+					@else
+						<p id="stock-0">Stock: {{ $product->stock }}</p>
+					@endif
+					<p id="price-0">Harga: {{ "Rp " . number_format($product->discounted_price, 0, ',', '.') }}</p>
+					@if ($product->stock > 0)
+						@php
+							$waPhone = preg_replace('/[^0-9]/', '', $product->supplier->phone_pic ?? '');
+						@endphp
+						@if ($waPhone)
+							<a href="https://wa.me/{{ $waPhone }}?text={{ urlencode('Halo, saya tertarik dengan produk ' . $product->title) }}" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: white;">
+								<button type="button" class="add-to-cart">Contact</button>
+							</a>
+						@else
+							<button type="button" class="add-to-cart out-of-stock" disabled>Contact Unavailable</button>
+						@endif
+					@endif
+				</div>
+			</div>
+			<div class="row mt-4">
+				<div class="col-md-12">
 					<p>{{ $product->description }}</p>
-					<a href="{{ route('cart.add', $product->id) }}" style="text-decoration: none; color: white;">
-						<button type="button" class="add-to-cart">Add to Cart</button>
-					</a>
 				</div>
 			</div>
 			<div class="row">
+				<div class="fasilitas-gallery">
+    <h3>Fasilitas</h3>
+    <div class="row">
+        @foreach($product->fasilitas as $f)
+            <div class="col-md-2">
+                <img src="{{ asset('storage/fasilitas/' . $f->foto) }}" alt="Fasilitas {{ $loop->iteration }}" class="img-fluid">
+            </div>
+        @endforeach
+    </div>
+</div>
+
+@if ($product->video_link)
+    <div class="mb-3">
+        <h4>Video</h4>
+        <div class="ratio ratio-16x9">
+            <iframe 
+                src="{{ $product->embed_video_link }}" 
+                title="Video Produk" 
+                allowfullscreen 
+                style="width:100%; height:450px; border:none;">
+            </iframe>
+        </div>
+    </div>
+@endif
+
+
     <div class="col-md-12">
         <h3>Reviews</h3>
         @forelse ($product->ulasans as $ulasan)
@@ -164,11 +207,14 @@
 
 					<div class="footer-item">
 						<div class="company-brand">
-						<p style="font-size:24px;"><b>K-llection</b></p>
+						<p style="font-size:24px;"><b>Salesman</b></p>
 							<!-- <img src="{{asset('frontend/images/main-logo.png')}}" alt="logo" class="footer-logo"> -->
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sagittis sed ptibus liberolectus
-								nonet psryroin. Amet sed lorem posuere sit iaculis amet, ac urna. Adipiscing fames
-								semper erat ac in suspendisse iaculis.</p>
+							<p><strong>Salesman</strong> adalah platform properti praktis, aman, dan transparan untuk membantu proses jual beli properti.</p>
+							<details>
+								<summary>View More</summary>
+								<p>Kami menghubungkan <strong>pemilik properti, penjual, pembeli, dan pencari properti</strong> dalam satu platform. Mulai dari menemukan rumah, apartemen, tanah, hingga properti komersial, Salesman membantu pengguna menemukan pilihan yang sesuai dengan kebutuhan mereka.</p>
+								<p>Kami percaya bahwa proses transaksi properti tidak harus rumit. Karena itu, Salesman menyediakan pengalaman yang sederhana dengan informasi properti yang jelas, pencarian yang mudah, serta proses transaksi yang lebih terorganisir.</p>
+							</details>
 						</div>
 					</div>
 
@@ -180,19 +226,19 @@
 						<h5>About Us</h5>
 						<ul class="menu-list">
 							<li class="menu-item">
-								<a href="#">vision</a>
+								<a href="#">Vision</a>
 							</li>
 							<li class="menu-item">
-								<a href="#">articles </a>
+								<a href="#">Articles</a>
 							</li>
 							<li class="menu-item">
-								<a href="#">careers</a>
+								<a href="#">Careers</a>
 							</li>
 							<li class="menu-item">
-								<a href="#">service terms</a>
+								<a href="#">Service Terms</a>
 							</li>
 							<li class="menu-item">
-								<a href="#">donate</a>
+								<a href="#">Donate</a>
 							</li>
 						</ul>
 					</div>

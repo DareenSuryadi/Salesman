@@ -34,7 +34,7 @@
                 <select name="product_category_id" class="form-control @error('product_category_id') is-invalid @enderror">
                     <option value="">-- Select Category Product --</option>
                     @foreach ($data['categories'] as $category)
-                        <option value="{{ $category->id }}">{{ $category->product_category_name }}</option>
+                        <option value="{{ $category->id }}" {{ old('product_category_id') == $category->id ? 'selected' : '' }}>{{ $category->product_category_name }}</option>
                     @endforeach
                 </select>
 
@@ -50,7 +50,7 @@
                 <select name="id_supplier" class="form-control @error('id_supplier') is-invalid @enderror">
                     <option value="">-- Select Supplier --</option>
                     @foreach ($data['suppliers_'] as $supplier)
-                        <option value="{{ $supplier->id }}">{{ $supplier->supplier_name }}</option>
+                        <option value="{{ $supplier->id }}" {{ old('id_supplier') == $supplier->id ? 'selected' : '' }}>{{ $supplier->supplier_name }}</option>
                     @endforeach
                 </select>
 
@@ -64,7 +64,7 @@
             <div class="form-group">
                 <label for="title">Title</label>
                 <input type="text" class="form-control form-control-user @error('title') is-invalid @enderror" id="title"
-                placeholder="Masukkan title product" name="title" required autocomplete="title">
+                placeholder="Masukkan title product" name="title" value="{{ old('title') }}" required autocomplete="title">
 
                 @error('title')
                     <span class="invalid-feedback" role="alert">
@@ -75,7 +75,7 @@
 
             <div class="form-group">
                 <label for="description">Description</label>
-                <textarea class="form-control @error('description') is-invalid @enderror" name="description" rows="5" placeholder="Masukkan description product"></textarea>
+                <textarea class="form-control @error('description') is-invalid @enderror" name="description" rows="5" placeholder="Masukkan description product">{{ old('description') }}</textarea>
 
                 @error('description')
                     <span class="invalid-feedback" role="alert">
@@ -85,9 +85,20 @@
             </div>
 
             <div class="form-group">
+                <label for="alamat">Alamat</label>
+                <textarea class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" rows="3" placeholder="Masukkan alamat properti" required>{{ old('alamat') }}</textarea>
+
+                @error('alamat')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
+
+            <div class="form-group">
                 <label for="price">Price</label>
                 <input type="number" class="form-control form-control-user @error('price') is-invalid @enderror" id="price"
-                placeholder="Masukkan price" name="price" required autocomplete="price">
+                placeholder="Masukkan price" name="price" value="{{ old('price') }}" required autocomplete="price">
 
                 @error('price')
                     <span class="invalid-feedback" role="alert">
@@ -95,11 +106,44 @@
                     </span>
                 @enderror
             </div>
+
+            <div class="form-group">
+                <label for="diskon">Diskon (%)</label>
+                <input type="number" class="form-control form-control-user @error('diskon') is-invalid @enderror" id="diskon"
+                placeholder="Masukkan diskon (0-100)" name="diskon" value="{{ old('diskon', 0) }}" required min="0" max="100" step="1">
+
+                @error('diskon')
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
+                @enderror
+            </div>
             
+            <label>Fasilitas 1</label>
+<input type="file" name="fasilitas1" accept="image/*" />
+
+<label>Fasilitas 2</label>
+<input type="file" name="fasilitas2" accept="image/*" />
+
+<label>Fasilitas 3</label>
+<input type="file" name="fasilitas3" accept="image/*" />
+
+<label>Fasilitas 4</label>
+<input type="file" name="fasilitas4" accept="image/*" />
+
+<label>Fasilitas 5</label>
+<input type="file" name="fasilitas5" accept="image/*" />
+
+<div class="form-group">
+    <label for="video_link">Video Link (YouTube, etc)</label>
+    <input type="url" name="video_link" class="form-control" placeholder="https://www.youtube.com/embed/..." value="{{ old('video_link') }}">
+</div>
+
+
             <div class="form-group">
                 <label for="stock">Stock</label>
                 <input type="number" class="form-control form-control-user @error('stock') is-invalid @enderror" id="stock"
-                placeholder="Masukkan stock" name="stock" required autocomplete="stock">
+                placeholder="Masukkan stock" name="stock" value="{{ old('stock') }}" required autocomplete="stock">
 
                 @error('stock')
                     <span class="invalid-feedback" role="alert">

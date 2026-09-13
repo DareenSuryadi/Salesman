@@ -33,7 +33,7 @@
                         <th scope="col">Kode Pos</th>
                         <th scope="col">Phone Supplier</th>
                         <th scope="col">Nama PIC</th>
-                        <th scope="col">Phone</th>
+                        <th scope="col">Phone PIC</th>
                         <th scope="col" style="width: 20%">Action</th>
                     </tr>
                 </thead>

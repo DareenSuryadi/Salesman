@@ -11,7 +11,7 @@
     <link href="{{asset('template/css/sb-admin-2.min.css')}}" rel="stylesheet">
 </head>
 
-<body style=" background-image : url(https://img.freepik.com/free-photo/violet-watercolor-texture-background_1083-172.jpg);  background-size: cover">
+<body style="background-color: #F3F2EC;">
     
     @yield('content')
     <script src="{{asset('template/vendor/jquery/jquery.min.js')}}"></script>

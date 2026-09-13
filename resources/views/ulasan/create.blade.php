@@ -108,7 +108,7 @@ button[type="submit"]:hover {
 
                     <div class="col-md-2">
 						<div class="main-logo">
-							<a href="{{ route('home') }}" style="font-size: 24px; font-weight: bold; color: #000000;">K-llection</a>
+							<a href="{{ route('home') }}" style="font-size: 24px; font-weight: bold; color: #000000;">Salesman</a>
 						</div>
 					</div>
 
@@ -245,9 +245,12 @@ button[type="submit"]:hover {
 
 					<div class="footer-item">
 						<div class="company-brand">
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sagittis sed ptibus liberolectus
-								nonet psryroin. Amet sed lorem posuere sit iaculis amet, ac urna. Adipiscing fames
-								semper erat ac in suspendisse iaculis.</p>
+							<p><strong>Salesman</strong> adalah platform properti praktis, aman, dan transparan untuk membantu proses jual beli properti.</p>
+							<details>
+								<summary>View More</summary>
+								<p>Kami menghubungkan <strong>pemilik properti, penjual, pembeli, dan pencari properti</strong> dalam satu platform. Mulai dari menemukan rumah, apartemen, tanah, hingga properti komersial, Salesman membantu pengguna menemukan pilihan yang sesuai dengan kebutuhan mereka.</p>
+								<p>Kami percaya bahwa proses transaksi properti tidak harus rumit. Karena itu, Salesman menyediakan pengalaman yang sederhana dengan informasi properti yang jelas, pencarian yang mudah, serta proses transaksi yang lebih terorganisir.</p>
+							</details>
 						</div>
 					</div>
 
@@ -259,19 +262,19 @@ button[type="submit"]:hover {
 						<h5>About Us</h5>
 						<ul class="menu-list">
 							<li class="menu-item">
-								<a href="#">vision</a>
+								<a href="#">Vision</a>
 							</li>
 							<li class="menu-item">
-								<a href="#">articles </a>
+								<a href="#">Articles</a>
 							</li>
 							<li class="menu-item">
-								<a href="#">careers</a>
+								<a href="#">Careers</a>
 							</li>
 							<li class="menu-item">
-								<a href="#">service terms</a>
+								<a href="#">Service Terms</a>
 							</li>
 							<li class="menu-item">
-								<a href="#">donate</a>
+								<a href="#">Donate</a>
 							</li>
 						</ul>
 					</div>

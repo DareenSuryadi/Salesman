@@ -7,12 +7,12 @@
 <div class="row justify-content-center">
     <div class="col-xl-5 col-lg-12 col-md-9">
         <div class="card o-hidden border-0 shadow-lg my-5">
-            <div class="card-body p-0" style="background-image: url(https://i.pinimg.com/736x/42/20/0a/42200aac44c406f9e6e75260498c34fe.jpg); background-size: cover; ">
+            <div class="card-body p-0" style="background-color: #fff;">
                 <div class="row">
                     <div class="col-lg-14">
                         <div class="p-5">
                             <div class="btn-wrap">
-                                <a href="{{ route('index') }}" class="btn btn-outline-accent btn-accent-arrow" style="color: black;">Back</a>
+                                <a href="{{ route('index') }}" class="btn btn-outline-accent btn-accent-arrow" style="color: black;" aria-label="Back" title="Back"><i class="fas fa-arrow-left" aria-hidden="true"></i></a>
                             </div>
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>

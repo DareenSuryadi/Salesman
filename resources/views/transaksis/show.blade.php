@@ -30,7 +30,7 @@
                 <tr>
                     <td>{{ $detail->title }}</td>
                     <td>{{ $detail->jumlah_pembelian }}</td>
-                    <td>{{ number_format($detail->price * $detail->jumlah_pembelian - $detail->price * $detail->jumlah_pembelian * $transaksi->diskon/100, 2) }}</td>
+                    <td>{{ "Rp " . number_format($detail->price * $detail->jumlah_pembelian - $detail->price * $detail->jumlah_pembelian * $detail->diskon / 100, 0, ',', '.') }}</td>
                     <td>{{ $transaksi->status}}</td>
 
                 </tr>

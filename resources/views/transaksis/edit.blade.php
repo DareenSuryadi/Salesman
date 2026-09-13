@@ -1,98 +1,101 @@
 @extends('admin.layouts.master')
 @if (Auth::user()->role == 'admin')
 @section('content')
-<h1 class="h3 mb-2 text-gray-800">Edit Form</h1>
+<div class="container">
+    <h2>Edit Transaksi</h2>
 
-@if(Session::has('success'))
-    <div class="card mb-4 py-3 border-left-primary">
+    @if(Session::has('success'))
+        <div class="card mb-4 py-3 border-left-primary">
+            <div class="card-body">
+                {{Session::get('success')}}
+            </div>
+        </div>
+    @endif
+
+    <div class="card">
         <div class="card-body">
-            {{Session::get('success')}}
+            <h5 class="card-title">Transaksi ID: {{ $transaksi->id }}</h5>
+            <p><strong>Tanggal Transaksi:</strong> {{ $transaksi->tanggal_transaksi }}</p>
+            <p><strong>Diskon:</strong> {{ $transaksi->diskon }}%</p>
+            <p><strong>Status:</strong> {{ $transaksi->status }}</p>
         </div>
     </div>
-@endif
-<div class="card shadow mb-4">
-    
-    <div class="card-header py-3">
-        <h6 class="m-0 font-weight-bold text-primary">Edit Transaksi</h6>
-    </div>
-    <div class="card-body">
-        <form id="transactionForm" action="{{ route('transaksis.update',$transaksi->id) }}" method="POST" enctype ="multipart/form-data">
-            @csrf
-            @method('PUT')
 
-            <div id="productList">
+    <br><br>
+
+    <h3>Detail Produk</h3>
+    <div class="card">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nama Produk</th>
+                    <th>Jumlah Pembelian</th>
+                    <th>Harga</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
                 @foreach ($detailTransaksis as $detail)
-                    <div class="form-group mb-3">
-                        <label for="id_product">Product</label>
-                        <select class="form-control" name="products[{{ $loop->index }}][id_product]" required>
-                            @foreach ($products as $product)
-                                <option value="{{ $product->id }}" {{ $product->id == $detail->id_product ? 'selected' : '' }}>
-                                    {{ $product->title }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="form-group mb-3">
-                        <label class="font-weight-bold">Jumlah Pembelian</label>
-                        <input type="number" class="form-control" name="products[{{ $loop->index }}][jumlah_pembelian]" value="{{ $detail->jumlah_pembelian }}" required>
-                    </div>
+                    <tr>
+                        <td>{{ $detail->title }}</td>
+                        <td>{{ $detail->jumlah_pembelian }}</td>
+                        <td>{{ "Rp " . number_format($detail->price * $detail->jumlah_pembelian - $detail->price * $detail->jumlah_pembelian * $detail->diskon / 100, 0, ',', '.') }}</td>
+                        <td>{{ $transaksi->status }}</td>
+                    </tr>
                 @endforeach
-            </div>
+            </tbody>
+        </table>
+    </div>
 
-            <button type="button" class="btn btn-primary" id="addProductBtn">Tambah Produk</button>
-            <br><br>        
-            <div class="form-group">
-                <label for="tanggal_transaksi">Tanggal Transaksi</label>
-                <input type="date" class="form-control form-control-user @error('tanggal_transaksi') is-invalid @enderror" id="tanggal_transaksi"
-                placeholder="Masukkan tanggal transaksi" value="{{ old('tanggal_transaksi', $transaksi->tanggal_transaksi) }}" name="tanggal_transaksi" required>
+    <br><br>
 
-                @error('tanggal_transaksi')
-                    <span class="invalid-feedback " role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                @enderror
-            </div>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Update Status Transaksi</h6>
+        </div>
+        <div class="card-body">
+            <form id="transactionForm" action="{{ route('transaksis.update',$transaksi->id) }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
 
-            <div class="form-group">
-                <label for="diskon">Diskon</label>
-                <input type="number" class="form-control form-control-user @error('diskon') is-invalid @enderror" id="diskon"
-                placeholder="Masukkan diskon" value="{{ old('diskon', $transaksi->diskon) }}" name="diskon" required>
+                @foreach ($detailTransaksis as $detail)
+                    <input type="hidden" name="products[{{ $loop->index }}][id_product]" value="{{ $detail->id_product }}">
+                    <input type="hidden" name="products[{{ $loop->index }}][jumlah_pembelian]" value="{{ $detail->jumlah_pembelian }}">
+                @endforeach
 
-                @error('diskon')
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                @enderror
-            </div>
+                <input type="hidden" name="tanggal_transaksi" value="{{ $transaksi->tanggal_transaksi }}">
+                <input type="hidden" name="diskon" value="{{ $transaksi->diskon }}">
 
-            <div class="form-group">
-                <label for="status">Status</label>
-                <select name="status" class="form-control @error('status') is-invalid @enderror">
-                    <option value="Done" {{ $transaksi->status == 'Done' ? 'selected' : '' }}>Done</option>
-                    <option value="Proses" {{ $transaksi->status == 'Proses' ? 'selected' : '' }}>Proses</option>
-                    <option value="Unpaid" {{ $transaksi->status == 'Unpaid' ? 'selected' : '' }}>Unpaid</option>
-                </select>
-                @error('status')
-                    <span class="invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
-                    </span>
-                @enderror
-            </div>
+                <div class="form-group">
+                    <label for="status">Status Transaksi</label>
+                    <select name="status" class="form-control @error('status') is-invalid @enderror">
+                        <option value="Done" {{ $transaksi->status == 'Done' ? 'selected' : '' }}>Done</option>
+                        <option value="Proses" {{ $transaksi->status == 'Proses' ? 'selected' : '' }}>Proses</option>
+                        <option value="Unpaid" {{ $transaksi->status == 'Unpaid' ? 'selected' : '' }}>Unpaid</option>
+                    </select>
+                    @error('status')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                    @enderror
+                </div>
 
-            <div class="form-group">
-                <label for="bukti_transaksi">Bukti Pembayaran</label>
-                <input type="file" name="bukti_transaksi" class="form-control" accept="image/*">
-                @if($transaksi->bukti_transaksi)
-                    <img src="{{ Storage::url($transaksi->bukti_transaksi) }}" alt="Bukti Transaksi" style="max-width: 200px; margin-top: 10px;">
-                @endif
-            </div>
+                <div class="form-group">
+                    <label>Bukti Pembayaran Customer</label>
+                    @if($transaksi->bukti_transaksi)
+                        <div class="mt-2 mb-2">
+                            <img src="{{ Storage::url($transaksi->bukti_transaksi) }}" alt="Bukti Transaksi" style="max-width: 320px; border: 1px solid #ddd; padding: 8px;">
+                        </div>
+                    @else
+                        <p class="text-muted mb-2">Belum ada bukti pembayaran yang diupload.</p>
+                    @endif
+                </div>
 
-            <div class="form-group">
-                <button class="btn btn-outline-primary">Update</button>
-                <button type="button" id="resetBtn" onclick="resetForm()" class="btn btn-md btn-warning">RESET</button>
-            </div>
-        </form>
+                <div class="form-group">
+                    <button class="btn btn-primary">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 

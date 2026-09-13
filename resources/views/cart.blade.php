@@ -31,7 +31,7 @@
 
                     <div class="col-md-2">
 						<div class="main-logo">
-							<a href="{{ route('home') }}" style="font-size: 24px; font-weight: bold; color: #000000;">K-llection</a>
+							<a href="{{ route('home') }}" style="font-size: 24px; font-weight: bold; color: #000000;">Salesman</a>
 						</div>
 					</div>
 
@@ -116,6 +116,12 @@
         <div class="container">
             <div class="row">
                 <h2>Cart</h2>
+				@if (session('error'))
+					<div class="alert alert-danger" role="alert">{{ session('error') }}</div>
+				@endif
+				@if (session('success'))
+					<div class="alert alert-success" role="alert">{{ session('success') }}</div>
+				@endif
                 <div class="col-md-12">
                     <table id="cart-table">
                         <thead>
@@ -165,7 +171,7 @@
                     @endforeach
 
                         <input type="hidden" class="form-control form-control-user @error('diskon') is-invalid @enderror" id="diskon"
-                        placeholder="Masukkan diskon" name="diskon" required autocomplete="diskon" min="20" max="20" step="0.01" value="20" disabled>
+						placeholder="Masukkan diskon" name="diskon" required autocomplete="diskon" min="0" max="0" step="0.01" value="0" disabled>
                     </div>
                     @guest
                         <a class="nav-link user-account for-buy" href="{{ route('login') }}">
@@ -193,10 +199,13 @@
 
 					<div class="footer-item">
 						<div class="company-brand">
-						<p style="font-size:24px;"><b>K-llection</b></p>
-							<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sagittis sed ptibus liberolectus
-								nonet psryroin. Amet sed lorem posuere sit iaculis amet, ac urna. Adipiscing fames
-								semper erat ac in suspendisse iaculis.</p>
+						<p style="font-size:24px;"><b>Salesman</b></p>
+							<p><strong>Salesman</strong> adalah platform properti praktis, aman, dan transparan untuk membantu proses jual beli properti.</p>
+							<details>
+								<summary>View More</summary>
+								<p>Kami menghubungkan <strong>pemilik properti, penjual, pembeli, dan pencari properti</strong> dalam satu platform. Mulai dari menemukan rumah, apartemen, tanah, hingga properti komersial, Salesman membantu pengguna menemukan pilihan yang sesuai dengan kebutuhan mereka.</p>
+								<p>Kami percaya bahwa proses transaksi properti tidak harus rumit. Karena itu, Salesman menyediakan pengalaman yang sederhana dengan informasi properti yang jelas, pencarian yang mudah, serta proses transaksi yang lebih terorganisir.</p>
+							</details>
 						</div>
 					</div>
 
@@ -208,19 +217,19 @@
 						<h5>About Us</h5>
 						<ul class="menu-list">
 							<li class="menu-item">
-								<a href="#">vision</a>
+								<a href="#">Vision</a>
 							</li>
 							<li class="menu-item">
-								<a href="#">articles </a>
+								<a href="#">Articles</a>
 							</li>
 							<li class="menu-item">
-								<a href="#">careers</a>
+								<a href="#">Careers</a>
 							</li>
 							<li class="menu-item">
-								<a href="#">service terms</a>
+								<a href="#">Service Terms</a>
 							</li>
 							<li class="menu-item">
-								<a href="#">donate</a>
+								<a href="#">Donate</a>
 							</li>
 						</ul>
 					</div>

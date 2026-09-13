@@ -101,7 +101,7 @@
             </div>
            
             <div class="form-group">
-                <label for="phone_pic">Phone</label>
+                <label for="phone_pic">Phone PIC</label>
                 <input type="number" class="form-control form-control-user @error('phone_pic') is-invalid @enderror" id="phone_pic"
                 placeholder="Masukkan phone pic" name="phone_pic" required autocomplete="phone_pic">
 

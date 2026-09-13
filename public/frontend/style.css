@@ -1857,7 +1857,14 @@ img.post-image {
 }
 
 .banner-content h2.banner-title {
-  font-size: 4.5em;
+  max-width: 520px;
+  max-height: 2.2em;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  font-size: 2.75em;
+  line-height: 1.1;
   font-weight: 500;
   color: #222;
 }
@@ -1915,7 +1922,7 @@ img.post-image {
 
 @media screen and (max-width: 999px) {
   .banner-content h2.banner-title {
-    font-size: 3.5em;
+    font-size: 2.25em;
   }
 
   #billboard .main-slider {
@@ -2095,11 +2102,23 @@ img.books-image {
   margin: 0 auto;
 }
 
+#special-offer .product-item figcaption > h3 {
+  box-sizing: border-box;
+  height: 64px;
+  min-height: 64px;
+  line-height: 32px;
+  overflow: hidden;
+}
+
 span.prev-price {
   color: #999;
   font-size: 0.8em;
   padding-right: 10px;
   text-decoration: line-through;
+}
+
+.discounted-price {
+  display: block;
 }
 
 
@@ -2393,6 +2412,10 @@ footer#footer {
   transition: 0.3s ease-out;
 }
 
+.product-style button.add-to-cart.out-of-stock {
+  bottom: 0;
+}
+
 .product-style:hover button.add-to-cart {
   bottom: 380px;
   bottom: 0;
@@ -2417,6 +2440,20 @@ footer#footer {
 .product-item .item-price {
   color: #74642F;
   font-size: 1.3em;
+}
+
+#featured-products .product-style,
+#special-offer .product-style,
+#popular-books .product-style {
+  height: 360px;
+}
+
+#featured-products .product-style img.product-item,
+#special-offer .product-style img.product-item,
+#popular-books .product-style img.product-item {
+  box-sizing: border-box;
+  height: 100%;
+  object-fit: contain;
 }
 
 @media screen and (max-width: 768px) {

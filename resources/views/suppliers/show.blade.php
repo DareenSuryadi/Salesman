@@ -23,7 +23,7 @@
         <hr>
         <p>Nama PIC : {{ $supplier->pic_name }}</p>
         <hr>
-        <p>Phone : {{ $supplier->phone_pic }}</p>
+        <p>Phone PIC : {{ $supplier->phone_pic }}</p>
     </div>
 </div>
 @endsection
